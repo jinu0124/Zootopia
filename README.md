@@ -26,8 +26,15 @@
 <br> <br>
 
 - 주식 예측 그래프 시각화 : 모델 고도화 & X변수 수정 필요 
-<img src="./images/data_predict1.png" width="50%">
+<img src="./images/data_predict1.png" width="40%">
 
 <br>
 
 - DB에 주식 데이터 넣기
+<img src="./images/stock_data1.png" width="40%">
+
+<img src="./images/stock_data2.png" width="40%">
+
+<br>
+- 모델 학습 
+
