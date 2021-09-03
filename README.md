@@ -23,3 +23,4 @@
  - DataFinanceReader 패키지를 통한 주식정보 받기
  - 키움 API 연동(실시간 호가창 정보 받아오기 위해)
 
+<img src="./images/data_predict1.png" width="50%">
