@@ -5,13 +5,13 @@
 
 #### 2021.08.30 ~ 2021.09.03
 
-- 빅데이터 분석 환경 준비  
- - Local Mysql DB 스키마 생성
- - Anaconda3 가상환경 python 3.6.8 & 관련 Package 설치  
- - Pycharm IDE 
+#### - 빅데이터 분석 환경 준비  
+  - Local Mysql DB 스키마 생성
+  - Anaconda3 가상환경 python 3.6.8 & 관련 Package 설치  
+  - Pycharm IDE 
  - WSL2 LINUX 접속 및 Ubuntu 20.04 LTS 설치
- - Hadoop 라이브러리 설치
- - xrdp Ubuntu GUI
+  - Hadoop 라이브러리 설치
+  - xrdp Ubuntu GUI
 
 - 주제 회의
  - MZ 세대를 위한 주식 학습/투자 플랫폼 
