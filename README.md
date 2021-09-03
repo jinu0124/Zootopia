@@ -23,4 +23,11 @@
  - DataFinanceReader 패키지를 통한 주식정보 받기
  - 키움 API 연동(실시간 호가창 정보 받아오기 위해)
 
+<br> <br>
+
+- 주식 예측 그래프 시각화 : 모델 고도화 & X변수 수정 필요 
 <img src="./images/data_predict1.png" width="50%">
+
+<br>
+
+- DB에 주식 데이터 넣기
