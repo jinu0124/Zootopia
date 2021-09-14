@@ -1,0 +1,3 @@
+class Predict:
+    day = []
+    price = []
