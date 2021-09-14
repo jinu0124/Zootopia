@@ -1,0 +1,15 @@
+pandas
+numpy
+cython
+scipy
+h5py==2.9.0
+pymysql
+keras==2.1.3
+pyqt5==5.13
+finance-datareader
+fastapi[all]
+uvicorn[standard]
+tensorflow==1.14
+scikit-learn
+beautifulsoup4
+sqlalchemy==1.4.22
