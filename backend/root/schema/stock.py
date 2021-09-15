@@ -3,7 +3,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
-from backend.root.schema.trade import Trade
+from ..schema.trade import Trade
 
 
 class Stock(BaseModel):

@@ -3,10 +3,10 @@ from typing import List
 from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
 
-from backend.root.database import crud
-from backend.root.exception.handler import handler
-from backend.root.schema import schemas
-from backend.root.database.conn import db
+from ..database import crud
+from ..exception.handler import handler
+from ..schema import schemas
+from ..database.conn import db
 
 
 router = APIRouter()

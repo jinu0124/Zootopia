@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 
-from backend.root.database.conn import Base
+from ..database.conn import Base
 
 class Stock(Base):
     __tablename__ = "stock"

@@ -1,7 +1,7 @@
 from sqlalchemy import sql
 from sqlalchemy.orm import Session
 
-from backend.root.model import stock
+from ..model import stock
 
 
 def get_symbol(db: Session, name: str):

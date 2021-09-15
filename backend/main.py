@@ -3,9 +3,9 @@ from dataclasses import asdict
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from backend.root.config.database import conf
-from backend.root.database.conn import db
-from backend.root.routers import index_router, stock
+from root.config.database import conf
+from root.database.conn import db
+from root.routers import index_router, stock
 
 
 # models.Base.metadata.create_all(bind=engine)

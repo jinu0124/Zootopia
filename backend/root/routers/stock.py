@@ -3,13 +3,13 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from backend.root.config.lstm_model import Config
-from backend.root.database import stock_crud
-from backend.root.exception.handler import handler
-from backend.root.schema import stock
-from backend.root.database.conn import db
-from backend.root.schema.predict import Predict
-from backend.root.service.stock_service import stock_service
+from ..config.lstm_model import Config
+from ..database import stock_crud
+from ..exception.handler import handler
+from ..schema import stock
+from ..database.conn import db
+from ..schema.predict import Predict
+from ..service.stock_service import stock_service
 
 router = APIRouter()
 
