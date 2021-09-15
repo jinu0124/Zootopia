@@ -4,12 +4,12 @@ from keras import Sequential
 from keras.layers import LSTM, Dropout, Dense, Activation
 from sklearn.preprocessing import MinMaxScaler
 
-from backend.root.config.lstm_model import conf
+from ..config.lstm_model import conf
 import numpy as np
 import pandas as pd
 import FinanceDataReader as fdr
 
-from backend.root.exception.handler import handler
+from ..exception.handler import handler
 
 
 class Service:
