@@ -26,7 +26,6 @@ async def get_symbol(name: str, db: Session = Depends(db.get_db)):
 @router.get("/predict")
 async def stock_predict(symbol: str):
     if symbol is None: handler.code(404)
-    print("a")
     predict_stock = stock_service.predict(symbol)
 
     conf = Config()
