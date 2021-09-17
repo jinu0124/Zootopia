@@ -8,4 +8,4 @@ beautifulsoup4
 pykiwoom
 sqlalchemy==1.4.22
 async-exit-stack async-generator
-
+pywin32

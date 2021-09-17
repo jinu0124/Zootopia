@@ -1,20 +1,15 @@
+import os
+import sys
 import uvicorn
 from dataclasses import asdict
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-# from model import models
-
 from routers import stock
 from config.database import conf
 from database.conn import db
-from service.kiwoom import k_win, appWin
-from service import kiwoom_init
 
 def init_app():
-    # kiwoom_init.InitWindow()
-    k_win.show()
-    # models.Base.metadata.create_all(bind=engine)
     app = FastAPI()
 
     c = conf()
@@ -41,8 +36,12 @@ def init_app():
 
 app = init_app()
 
-
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
+
+
+
+
+
 
 

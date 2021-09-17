@@ -7,7 +7,6 @@ from root.config.database import conf
 from root.database.conn import db
 from root.routers import index_router, stock
 
-
 # models.Base.metadata.create_all(bind=engine)
 
 def init_app():
