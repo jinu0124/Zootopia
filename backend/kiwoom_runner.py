@@ -56,15 +56,16 @@ class MyWindow(QMainWindow):
             self.getTenTimeHoga(req_decode['symbol'])
 
             while True:
-                time.sleep(0.5)         # 0.5초마다 발신
+                time.sleep(1)         # 1초마다 발신
                 try:
                     # [req_decode['symbol']]
-                    byte_msg = json.dumps(self.ask, indent=2).encode('utf-8')
+                    byte_msg = json.dumps(self.ask[req_decode['symbol']], indent=2).encode('utf-8')
                     client_socket.send(byte_msg)
-                    byte_msg = json.dumps(self.bid, indent=2).encode('utf-8')
+                    byte_msg = json.dumps(self.bid[req_decode['symbol']], indent=2).encode('utf-8')
                     client_socket.send(byte_msg)
                 except:
                     print("서버 소켓 닫음.")
+                    self.removeTenTimeHoga(req_decode['symbol'])
                     client_socket.close()
                     break
 
@@ -92,29 +93,31 @@ class MyWindow(QMainWindow):
             t.start()
 
     def btn_clicked(self):
-        df = self.k.block_request("opt10001",
-                                  종목코드="005930",
-                                  output="주식기본정보",
-                                  next=0)
-        print(df)
+        self.getTenTimeHoga("005930")
+        # df = self.k.block_request("opt10001",
+        #                           종목코드="005930",
+        #                           output="주식기본정보",
+        #                           next=0)
+        # print(df)
 
     def _handler_login(self, err_code):
         if err_code == 0:
             self.statusBar().showMessage("login 완료")
 
     def _handler_real_data(self, code, real_type, data):
-        print(code, real_type, data)
+        print(code, real_type)
 
         if real_type == "주식호가잔량":
-            time = self.GetCommRealData(code, 21)
             ask, bid = dict(), dict()
+            ask['price'], ask['volume'] = [], []
+            bid['price'], bid['volume'] = [], []
             for i in range(1, 11):
-                ask['price' + str(i)].append(self.GetCommRealData(code, 40 + i))
-                ask['volume' + str(i)].append(self.GetCommRealData(code, 60 + i))
+                ask['price'].append(self.GetCommRealData(code, 40 + i))
+                ask['volume'].append(self.GetCommRealData(code, 60 + i))
+                bid['price'].append(self.GetCommRealData(code, 50 + i))
+                bid['volume'].append(self.GetCommRealData(code, 70 + i))
 
-                bid['price' + str(i)].append(self.GetCommRealData(code, 50 + i))
-                bid['volume' + str(i)].append(self.GetCommRealData(code, 70 + i))
-
+            self.ask[str(code)], self.bid[str(code)] = [], []
             self.ask[str(code)].append(ask)
             self.bid[str(code)].append(bid)
 
