@@ -15,10 +15,11 @@ class MyWindow():
 
     def getTenTimeHoga(self, client_socket):
         ask = client_socket.recv(1024)
-        ask = ast.literal_eval(ask.decode('utf-8'))
         if len(ask) == 0:
             return [], []
-        ask_decode = ast.literal_eval(ask.decode('utf-8'))[0]
+        ask = ast.literal_eval(ask.decode('utf-8'))
+        ask_decode = ask[0]
+        # ask_decode = ast.literal_eval(ask.decode('utf-8'))[0]
         bid = client_socket.recv(1024)
         bid_decode = ast.literal_eval(bid.decode('utf-8'))[0]
 

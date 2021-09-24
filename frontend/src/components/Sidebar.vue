@@ -91,7 +91,7 @@ border-right:1px solid #e5e5e5;
 position:absolute;
 top:0;
 bottom:0;
-height:100%;
+height:200%;
 left:0;
 width:60px;
 overflow:hidden;

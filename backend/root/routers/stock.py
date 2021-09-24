@@ -23,6 +23,7 @@ async def get_stock_profile(name: str, db: Session = Depends(db.get_db)):
 
     return stock_profile
 
+
 @router.get("/predict")
 async def stock_predict(symbol: str):
     if symbol is None: handler.code(404)
@@ -40,3 +41,15 @@ async def stock_predict(symbol: str):
     ret['day'] = pred.day
     return ret
 
+
+@router.get("/today")
+async def get_today(symbol: str):
+    if symbol is None or len(symbol) == 0:
+        handler.code(404)
+
+    today = stock_service.get_today(symbol)
+    print(today)
+    print(type(today))
+    print(today['Open'])
+
+    return today

@@ -10,4 +10,13 @@ export default {
             },
         })
     },
+    getStockToday(symbol) {
+        return _axios({
+            url: `/stock/today`,
+            method: 'get',
+            params: {
+                symbol: symbol
+            },
+        })
+    },
 }

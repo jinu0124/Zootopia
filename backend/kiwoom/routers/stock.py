@@ -41,10 +41,11 @@ async def get_hoga(symbol: str, client_socket: WebSocket, db: Session = Depends(
         cnt += 1
         print(cnt)
         ask, bid = k_win.getTenTimeHoga(server_socket)
-        if len(ask) == 0:
-            break
+
         await client_socket.send_json(ask)
         await client_socket.send_json(bid)
+        if len(ask) == 0:
+            break
 
     print("서버 소켓 닫음")
     await client_socket.close()
