@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 @router.get("/symbol", response_model=stock.Stock)
-async def get_symbol(name: str, db: Session = Depends(db.get_db)):
+async def get_stock_profile(name: str, db: Session = Depends(db.get_db)):
     if name is None:
         handler.code(404)
 

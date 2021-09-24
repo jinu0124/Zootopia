@@ -49,33 +49,26 @@ class MyWindow(QMainWindow):
     # 특정 Client와 연결된 상태
     def handle_client(self, client_socket, addr):
         print("Client's Addr :", addr)
-        req = client_socket.recv(128)
+        req = client_socket.recv(256)
         req_decode = ast.literal_eval(req.decode('utf-8'))
-        print(req_decode)
         if req_decode['method'] == 'get_hoga':
             self.getTenTimeHoga(req_decode['symbol'])
 
             while True:
                 time.sleep(1)         # 1초마다 발신
                 try:
-                    # [req_decode['symbol']]
+                    if len(self.ask[req_decode['symbol']]) == 0:
+                        client_socket.send(json.dumps([]).encode('utf-8'))
+                        raise Exception
                     byte_msg = json.dumps(self.ask[req_decode['symbol']], indent=2).encode('utf-8')
                     client_socket.send(byte_msg)
                     byte_msg = json.dumps(self.bid[req_decode['symbol']], indent=2).encode('utf-8')
                     client_socket.send(byte_msg)
-                except:
+                except Exception as e:
                     print("서버 소켓 닫음.")
                     self.removeTenTimeHoga(req_decode['symbol'])
                     client_socket.close()
                     break
-
-
-            # ret = self.k.block_request("opt10001",
-            #                       종목코드="005930",
-            #                       output="주식기본정보",
-            #                       next=0)
-            # print(ret)
-
 
     def init_socket(self):
         print("init_socket")
@@ -107,6 +100,9 @@ class MyWindow(QMainWindow):
     def _handler_real_data(self, code, real_type, data):
         print(code, real_type)
 
+        if real_type == "ECN주식호가잔량":
+            self.ask[str(code)] = []
+            self.bid[str(code)] = []
         if real_type == "주식호가잔량":
             ask, bid = dict(), dict()
             ask['price'], ask['volume'] = [], []
@@ -123,14 +119,13 @@ class MyWindow(QMainWindow):
 
             print(self.ask[str(code)])
 
-
     def getLastPrice(self, code):
         self.ocx.dynamicCall("GetMasterLastPrice(QString)", [int(code)])
 
     def getTenTimeHoga(self, symbol):
         print("get hoga register")
         self.ocx.dynamicCall("SetRealReg(QString, QString, QString, QString)",
-                                    "1000", str(symbol), "41", 1)  # screen_no, code_list, fid_list, real_type
+                             "1000", str(symbol), "41", 1)  # screen_no, code_list, fid_list, real_type
 
     def removeTenTimeHoga(self, symbol):
         self.ocx.dynamicCall("SetRealRemove(QString, QString, QString, QString)",
