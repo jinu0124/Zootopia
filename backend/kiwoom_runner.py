@@ -80,7 +80,9 @@ class MyWindow(QMainWindow):
         server_socket.bind((host, port))
         server_socket.listen(1000)
         while True:
+            print("대기")
             client_socket, addr = server_socket.accept()
+            print("소켓 연결 요청 허가")
             t = threading.Thread(target=self.handle_client, args=(client_socket, addr))
             t.daemon = True                 # 데몬 프로세스로 실행 ( 부모가 종료되면 함께 종료 )
             t.start()
@@ -110,14 +112,17 @@ class MyWindow(QMainWindow):
             for i in range(1, 11):
                 ask['price'].append(self.GetCommRealData(code, 40 + i))
                 ask['volume'].append(self.GetCommRealData(code, 60 + i))
+                ask['updown'] = 'ask';
                 bid['price'].append(self.GetCommRealData(code, 50 + i))
                 bid['volume'].append(self.GetCommRealData(code, 70 + i))
+                bid['updown'] = 'bid';
 
             self.ask[str(code)], self.bid[str(code)] = [], []
             self.ask[str(code)].append(ask)
             self.bid[str(code)].append(bid)
 
             print(self.ask[str(code)])
+            print(self.bid[str(code)])
 
     def getLastPrice(self, code):
         self.ocx.dynamicCall("GetMasterLastPrice(QString)", [int(code)])

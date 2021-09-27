@@ -21,7 +21,23 @@
             <StockInfo v-bind:stockToday="stockToday"></StockInfo>
         </div>
         <div class="row hoga_stage">
-            <PieChart class="col-md-3" :height="300" :width="250" :data="chartData"></PieChart>
+            <div class="row col-md-3">
+                <HogaChart :ask="pieChartAsk" :bid="pieChartBid"></HogaChart>
+
+                <!-- <div class="col-md-1"></div>
+                <pie-chart class="col-md-8" :height="250" :data="chartData"></pie-chart>
+                <div class="col-md-3"></div>
+
+                <div class="col-md-3"></div>
+                <div class="col-md-4 sell_amount">
+                    매수 <div style="font-size: 1.8em;">{{chartData[0]}}%</div>
+                </div>
+                <div class="col-md-4 sell_amount">
+                    매도 <div style="font-size: 1.8em;">{{chartData[1]}}%</div>
+                </div>
+                <div class="col-md-1"></div> -->
+            </div>
+            
             <Hoga class="col-md-9" v-bind:askPrice="askPrice" :bidPrice="bidPrice" 
             :askVolume="askVolume" :bidVolume="bidVolume"></Hoga>
         </div>
@@ -34,7 +50,8 @@ import SearchBar from "../components/Searchbar.vue"
 import stock from "../api/stock"
 import LineChart from "../components/LineChart.js"
 import StockInfo from "../components/StockInfo.vue"
-import PieChart from "../components/PieChart.js"
+// import PieChart from "../components/PieChart.js"
+import HogaChart from "../components/HogaChart.vue"
 import Hoga from "../components/Hoga.vue"
 
 export default {
@@ -44,7 +61,8 @@ export default {
         SearchBar,
         LineChart,
         StockInfo,
-        PieChart,
+        // PieChart,
+        HogaChart,
         Hoga,
     },
     data() {
@@ -83,20 +101,11 @@ export default {
                 },
                 ]
             },
-
-            chartData: {
-                hoverBackgroundColor: "red",
-                hoverBorderWidth: 10,
-                labels: ["Green", "Red", "Blue"],
-                datasets: [
-                {
-                    label: "Data One",
-                    backgroundColor: ["#41B883", "#E46651", "#00D8FF"],
-                    data: [1, 10, 5]
-                }
-                ]
-            },
-
+    
+            // chartData: [1, 1, 0]
+            pieChartAsk: 0,
+            pieChartBid: 0,
+            //[ this.rateOfBidVolume, this.rateOfAskVolume],
 
         }
     },
@@ -123,41 +132,41 @@ export default {
                 this.socket.onmessage = ({data}) => {
                     cnt = 1 - cnt
                     if(cnt % 2 != 0) this.getToday(this.stockProfile[idx].symbol)
-
-                    data = {
-                        price: ["+77300", "+77400", "+77500", "+77600", "+77300", "+77400", "+77500", "+77600", "+77500", "+77600"],
-                        volume: [468435,8643,6843,1580, 468435,8643,6843,158, 6843,158]
-                        }
+                    // console.log(data)
+                    // data = {
+                    //     price: ["+77300", "+77400", "+77500", "+77600", "+77300", "+77400", "+77500", "+77600", "+77500", "+77600"],
+                    //     volume: [468435,8643,6843,1580, 468435,8643,6843,158, 6843,158]
+                    //     }
                     
-                    this.askPrice = []
-                    this.askVolume = []
-                    this.bidPrice = []
-                    this.bidVolume = []
+                    data = JSON.parse(data)
+                    // data = {
+                    //     price: ["-77300", "-77400", "-77500", "-77600", "-77300", "-77400", "-77500", "-77600", "-77500", "-77600"],
+                    //     volume: [468435,8643,6843,1580, 468435,8643,6843,158, 6843,158]
+                    //     }
+                    if(data.updown == "bid"){                    
+                        this.bidPrice = []
+                        this.bidVolume = []
 
-                    if(data.price[0][0] == "+"){
-                        console.log("+")
+                        for(let i=data.price.length - 1; i>=0; i--){
+                            this.bidPrice[this.bidPrice.length] = data.price[i].substring(1,data.price[i].length)
+                        }
+                        for(let i=data.volume.length - 1; i>=0; i--){
+                            this.bidVolume[this.bidVolume.length] = data.volume[i];
+                        }
+                    }
+                    else if(data.updown == "ask"){
+                        this.askPrice = []
+                        this.askVolume = []
+
                         data.price.forEach(e => {
                             this.askPrice[this.askPrice.length] = e.substring(1,e.length)
-                            
                         });
                         data.volume.forEach(e => {
                             this.askVolume[this.askVolume.length] = e
                         });
-                        console.log(this.askPrice, this.askVolume)
                     }
-                    data = {
-                        price: ["-77300", "-77400", "-77500", "-77600", "-77300", "-77400", "-77500", "-77600", "-77500", "-77600"],
-                        volume: [468435,8643,6843,1580, 468435,8643,6843,158, 6843,158]
-                        }
-                    if(data.price[0][0] == "-"){                    // else
-                        console.log("-")
-                        data.price.forEach(e => {
-                            this.bidPrice[this.bidPrice.length] = e.substring(1,e.length)
-                        });
-                        data.volume.forEach(e => {
-                            this.bidVolume[this.bidVolume.length] = e
-                        });
-                    }
+
+                    // this.chartData[2] += 1
                 }
             }
         },
@@ -176,6 +185,34 @@ export default {
         setInterval(() => {
             this.now = this.$moment(new Date()).format("DD MMM YYYY HH:mm:ss")
         }, 1000)
+    },
+    watch:{
+        rateOfBidVolume(){
+            this.pieChartAsk = this.rateOfAskVolume
+            this.pieChartBid = this.rateOfBidVolume
+        }
+    },
+    computed:{
+        rateOfAskVolume(){
+            let sum = 0
+            let sum2 = 0
+            this.askVolume.forEach(e => {
+                sum += Math.abs(e)
+            })
+
+            this.bidVolume.forEach(e => {
+                sum2 += Math.abs(e)
+            })
+            let rate = sum / (sum + sum2)
+            if(isNaN(rate)) return 49
+
+            rate = Math.round(rate * 100)
+            return rate
+           
+        },
+        rateOfBidVolume(){
+            return 100 - this.rateOfAskVolume;
+        }
     }
 }
 </script>
@@ -240,5 +277,12 @@ export default {
     top: 180px;
 }
 
+.sell_amount{
+    text-align: center;
+    float: center;
+    font-size: 0.8em;
+    margin-top: 0px;
+    line-height: 250%;
+}
 
 </style>

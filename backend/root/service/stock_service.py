@@ -43,7 +43,7 @@ class Service:
         fdr_data = dict()
         for e in df.keys():
             if e == 'Change': continue
-            fdr_data[e] = int(df[e].values[0])
+            fdr_data[e] = int(df[e].values[-1])
 
         return fdr_data
 
