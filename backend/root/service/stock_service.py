@@ -109,6 +109,8 @@ class Service:
         return predict_stock
 
 
+
+
     def pre_processing(self, real):
         real['Updown'] = real['Close'] - real['Open']
         for i in range(len(real['Updown'])):

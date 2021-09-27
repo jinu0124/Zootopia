@@ -2,7 +2,7 @@
   <div>
         <ul class="hoga_title" style="float:left; text-align:left;">
             <li>
-                <div class="hoga_info row">&nbsp;</div>
+                <div class="hoga_info row" style="text-align:center; float:center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;잔량</div>
             </li>
             <li><div class="hoga_info">{{Volume[9]}}</div></li>
             <li><div class="hoga_info">{{Volume[8]}}</div></li>

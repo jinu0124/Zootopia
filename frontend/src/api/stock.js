@@ -19,4 +19,14 @@ export default {
             },
         })
     },
+    getFinancialInfo(stockName) {
+        console.log(stockName)
+        return _axios({
+            url: `/stock/financial_info`,
+            method: 'get',
+            params: {
+                name: stockName,
+            },
+        })
+    }
 }

@@ -36,7 +36,7 @@ async def get_hoga(symbol: str, client_socket: WebSocket, db: Session = Depends(
     print("socket Init")
     cnt = 0
     while True:
-        if cnt > 20:
+        if cnt > 200:
             break
         cnt += 1
         print(cnt)

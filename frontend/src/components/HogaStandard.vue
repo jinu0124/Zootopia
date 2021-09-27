@@ -2,7 +2,7 @@
   <div>
         <ul class="hoga_title">
             <li>
-                <div class="hoga_info under_line">호가</div>
+                <div class="hoga_info under_line">{{askBid}}</div>
             </li>
             <li><div class="hoga_info">10</div></li>
             <li><div class="hoga_info">9</div></li>
@@ -21,7 +21,7 @@
 <script>
 export default {
     name: "HogaStandard",
-    props: ["hoga"],
+    props: ["askBid"],
     methods:{
 
     }

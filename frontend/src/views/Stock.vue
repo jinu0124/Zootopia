@@ -6,41 +6,66 @@
         <div class="row">
             <SearchBar v-on:searchStock="searchStock"></SearchBar>
         </div>
-        <div class="row">
-            <div class="stock_remark_title col-md-8">주가</div>
-            <div class="stock_remark col-md-7">of {{now}} AM</div>
-            <div class="stock_remark col-md-3" style="padding-left:50px;">
-                <button class="duration_button" @click="setDuration(0)">1년</button>
-                <button class="duration_button" @click="setDuration(1)">3개월</button>
-                <button class="duration_button" @click="setDuration(2)">1달</button>
-                <button class="duration_button" @click="setDuration(3)">2주</button>
-            </div>
-        </div>
-        <div class="row stock_chart">
-            <LineChart :height="400" class="col-md-8" :chart-data="datacollection"></LineChart>
-            <StockInfo v-bind:stockToday="stockToday"></StockInfo>
-        </div>
-        <div class="row hoga_stage">
-            <div class="row col-md-3">
-                <HogaChart :ask="pieChartAsk" :bid="pieChartBid"></HogaChart>
-
-                <!-- <div class="col-md-1"></div>
-                <pie-chart class="col-md-8" :height="250" :data="chartData"></pie-chart>
-                <div class="col-md-3"></div>
-
-                <div class="col-md-3"></div>
-                <div class="col-md-4 sell_amount">
-                    매수 <div style="font-size: 1.8em;">{{chartData[0]}}%</div>
-                </div>
-                <div class="col-md-4 sell_amount">
-                    매도 <div style="font-size: 1.8em;">{{chartData[1]}}%</div>
-                </div>
-                <div class="col-md-1"></div> -->
-            </div>
+        <div v-if="searchWord==''">
             
-            <Hoga class="col-md-9" v-bind:askPrice="askPrice" :bidPrice="bidPrice" 
-            :askVolume="askVolume" :bidVolume="bidVolume"></Hoga>
         </div>
+        <div v-else>
+            <div class="row">
+                <div class="stock_remark_title col-md-8">주가</div>
+                <div class="stock_remark col-md-7">of {{now}} AM</div>
+                <div class="stock_remark col-md-3" style="padding-left:50px;">
+                    <button class="duration_button" @click="setDuration(0)">1년</button>
+                    <button class="duration_button" @click="setDuration(1)">3개월</button>
+                    <button class="duration_button" @click="setDuration(2)">1달</button>
+                    <button class="duration_button" @click="setDuration(3)">2주</button>
+                </div>
+            </div>
+            <div class="row stock_chart">
+                <LineChart :height="400" class="col-md-8" :chart-data="datacollection"></LineChart>
+                <StockInfo v-bind:stockToday="stockToday"></StockInfo>
+            </div>
+            <div class="row hoga_stage">
+                <div class="row col-md-3">
+                    <HogaChart :ask="pieChartAsk" :bid="pieChartBid"></HogaChart>
+                </div>
+                <Hoga class="col-md-9" v-bind:askPrice="askPrice" :bidPrice="bidPrice" 
+                :askVolume="askVolume" :bidVolume="bidVolume"></Hoga>
+            </div>
+            <div class="row finance_info">
+                재무정보
+            </div>
+            <div class="row stock_remark col-md-7" style="top:240px;">of {{searchWord}}</div>
+            <div> &nbsp;</div>
+            <div class="row finance_info col-md-12">
+                <div class="col-md-3">
+                    <div class="finance_summary">매출액(연결)</div>
+                    <div class="finance_summary">매출액(별도)</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="finance_summary">영업이익</div>
+                    <div class="finance_summary">자산</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="finance_summary">당기순이익</div>
+                    <div class="finance_summary">뭐할까</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="finance_summary">설립일</div>
+                    <div class="finance_summary">주소</div>
+                </div>
+                
+            </div>
+            <div class="row bar_chart">
+                <BarChart class="col-md-2" :height="250" :financeData="finance.linked_sales" :label="labels[0]"></BarChart>          <!--  :barData="finance" -->
+                <div class="col-md-1"></div>
+                <BarChart class="col-md-2" :height="250" :financeData="finance.separate_sales"  :label="labels[1]"></BarChart>
+                <div class="col-md-1"></div>
+                <BarChart class="col-md-2" :height="250" :financeData="finance.revenue"  :label="labels[2]"></BarChart>
+                <div class="col-md-1"></div>
+                <BarChart class="col-md-2" :height="250" :financeData="finance.asset"  :label="labels[3]"></BarChart>
+            </div>
+        </div>
+        
     </div>
 </template>
 
@@ -50,9 +75,9 @@ import SearchBar from "../components/Searchbar.vue"
 import stock from "../api/stock"
 import LineChart from "../components/LineChart.js"
 import StockInfo from "../components/StockInfo.vue"
-// import PieChart from "../components/PieChart.js"
 import HogaChart from "../components/HogaChart.vue"
 import Hoga from "../components/Hoga.vue"
+import BarChart from "../components/BarChart.js"
 
 export default {
     name: "Stock",
@@ -61,9 +86,9 @@ export default {
         SearchBar,
         LineChart,
         StockInfo,
-        // PieChart,
         HogaChart,
         Hoga,
+        BarChart,
     },
     data() {
         return {
@@ -83,6 +108,10 @@ export default {
             askVolume: [],
             bidPrice: [],
             bidVolume: [],
+
+            finance: [],
+            labels: ['매출액(연결)', '매출액(별도)', '영업이익(연결)', '자산'],
+
             
             datacollection: {
                 labels: ["week 1", "week 2", "week 3", "week 4", "week 5", "week 6", "week 7", "week 8", "week 9", "week 10"],
@@ -102,7 +131,6 @@ export default {
                 ]
             },
     
-            // chartData: [1, 1, 0]
             pieChartAsk: 0,
             pieChartBid: 0,
             //[ this.rateOfBidVolume, this.rateOfAskVolume],
@@ -122,6 +150,8 @@ export default {
             this.stockProfile.push(data)
 
             this.socketConnect(lastIdx)
+
+            await this.financeInfo(searchWord)
         },
         socketConnect(idx){
             console.log(this.stockProfile[idx].symbol)
@@ -165,17 +195,23 @@ export default {
                             this.askVolume[this.askVolume.length] = e
                         });
                     }
-
-                    // this.chartData[2] += 1
                 }
             }
         },
         async getToday(symbol){
             let res = await stock.getStockToday(symbol)
-            console.log(res)
             
             this.stockToday = res.data
             console.log(this.stockToday)
+        },
+        async financeInfo(searchWord){
+            let res = await stock.getFinancialInfo(searchWord)
+
+            this.finance = {}
+            this.finance = res.data
+
+            console.log(this.finance)
+            
         },
         setDuration(dur){
             this.duration = dur
@@ -283,6 +319,25 @@ export default {
     font-size: 0.8em;
     margin-top: 0px;
     line-height: 250%;
+}
+
+.finance_info{
+    position: relative;
+    padding-left: 120px;
+    top: 240px;
+    font-size:1.4em;
+}
+
+.finance_summary{
+    position: relative;
+    text-align: left;
+    font-size: 0.7em;
+}
+
+.bar_chart{
+    position: relative;
+    padding-left: 120px;
+    padding-top: 280px;
 }
 
 </style>

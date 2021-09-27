@@ -2,7 +2,7 @@
   <div>
         <ul class="hoga_title" style="float:right; text-align:right;">
             <li>
-                <div class="hoga_info">&nbsp;</div>
+                <div class="hoga_info" style="text-align:center;">호가</div>
             </li>
             <li><div class="hoga_info">{{Price[9]}}</div></li>
             <li><div class="hoga_info">{{Price[8]}}</div></li>
