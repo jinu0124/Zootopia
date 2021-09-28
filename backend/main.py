@@ -32,7 +32,6 @@ def init_app():
     )
 
     # 라우터
-    # app.include_router(index_router.router, prefix='/api', tags=['users'])
     app.include_router(stock.router, prefix='/stock', tags=['stocks'])
 
     return app

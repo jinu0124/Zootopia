@@ -271,6 +271,8 @@ export default {
             this.duration = dur
         },
         convertUnit(cash){
+            if(cash == 'NaN' || cash == undefined) return '-'
+
             let jo = ""
             let uk = ""
             if(cash >= 1000000000000){
