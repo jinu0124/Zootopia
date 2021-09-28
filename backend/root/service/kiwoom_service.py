@@ -1,15 +1,10 @@
-import sys
-from PyQt5.QtWidgets import *
-from PyQt5.QAxContainer import *
-
-import socket
 import json
 import ast
 
 host = "127.0.0.1"
 port = 4000
 
-class MyWindow():
+class Kiwoom():
     def __init__(self):
         super().__init__()
 
@@ -31,4 +26,5 @@ class MyWindow():
         pass
 
 
-k_win = MyWindow()
+k_win = Kiwoom()
+

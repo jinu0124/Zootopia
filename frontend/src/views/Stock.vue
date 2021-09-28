@@ -165,7 +165,7 @@ export default {
         async socketConnect(idx){
             if(this.socket != null) await this.socket.close()
 
-
+            // 임시 테스트
             let data = {
                 price: ["+77300", "+77400", "+77500", "+77600", "+77300", "+77400", "+77500", "+77600", "+77500", "+77600"],
                 volume: [468435,348643,156843,141580, 68435,108643,26843,24158, 56843,158],
@@ -202,7 +202,7 @@ export default {
 
 
 
-            this.socket = new WebSocket("ws://localhost:8080/kiwoom/hoga/" + this.stockProfile[idx].symbol)
+            this.socket = new WebSocket("ws://localhost:8081/stock/hoga/" + this.stockProfile[idx].symbol)
             this.socket.onopen = () => {
                 this.status = "connected";
                 let cnt = 0
@@ -215,12 +215,6 @@ export default {
                     // console.log(data)
 
                     data = JSON.parse(data)
-
-                    data = {
-                        price: ["+77300", "+77400", "+77500", "+77600", "+77300", "+77400", "+77500", "+77600", "+77500", "+77600"],
-                        volume: [468435,348643,156843,141580, 68435,108643,26843,24158, 56843,158],
-                        updown: "bid",
-                    }
                     
                     if(data.updown == "bid"){                    
                         this.bidPrice = []
@@ -233,12 +227,7 @@ export default {
                             this.bidVolume[this.bidVolume.length] = data.volume[i];
                         }
                     }
-                    data = {
-                        price: ["-77300", "-77400", "-77500", "-77600", "-77300", "-77400", "-77500", "-77600", "-77500", "-77600"],
-                        volume: [257435,25443,62843,12580, 4435,893,6843,458,8403,284],
-                        updown: "ask",
-                    }
-                    if(data.updown == "ask"){
+                    else if(data.updown == "ask"){
                         this.askPrice = []
                         this.askVolume = []
 
