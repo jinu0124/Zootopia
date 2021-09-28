@@ -59,7 +59,7 @@ async def get_today(symbol: str):
         handler.code(404)
 
     today = stock_service.get_today(symbol)
-    print(today)
+    print("종목 금일 데이터: ", today)
 
     return today
 

@@ -36,21 +36,28 @@ async def get_hoga(symbol: str, client_socket: WebSocket, db: Session = Depends(
     print("socket Init")
     cnt = 0
     while True:
-        if cnt > 200:
+        if cnt > 10:
             break
         cnt += 1
-        print(cnt)
+        print("Server: 프로그램에 소켓 통신 요청", cnt, "번째")
         ask, bid = k_win.getTenTimeHoga(server_socket)
 
-        await client_socket.send_json(ask)
-        await client_socket.send_json(bid)
         if len(ask) == 0:
+            print("Server: 호가 정보 없음.")
             break
+
+        print("Server: 프론트로 호가 정보 전송 전")
+        try:
+            await client_socket.send_json(ask)
+            await client_socket.send_json(bid)
+            print("Server: 프론트로 호가 정보 전송 완료")
+        except:
+            break
+
 
     print("서버 소켓 닫음")
     await client_socket.close()
     server_socket.close()
-
 
 
 @router.get("/last/{symbol}")
