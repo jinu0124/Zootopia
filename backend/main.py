@@ -5,7 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from root.config.database import conf
 from root.database.conn import db
-from root.routers import stock
+from root.routers import stock, naver
 
 # models.Base.metadata.create_all(bind=engine)
 
@@ -34,6 +34,7 @@ def init_app():
     # 라우터
     # app.include_router(index_router.router, prefix='/api', tags=['users'])
     app.include_router(stock.router, prefix='/stock', tags=['stocks'])
+    app.include_router(naver.router, prefix='/naver', tags=['navers'])
 
     return app
 
