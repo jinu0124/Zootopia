@@ -15,3 +15,5 @@ beautifulsoup4
 sqlalchemy==1.4.22
 xmltodict
 opendartreader
+konlpy
+wordcloud
