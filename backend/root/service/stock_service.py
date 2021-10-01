@@ -1,6 +1,7 @@
 from datetime import timedelta, datetime
+import os
 
-from keras import Sequential
+from keras.models import load_model
 from keras.layers import LSTM, Dropout, Dense, Activation
 from sklearn.preprocessing import MinMaxScaler
 
@@ -11,31 +12,33 @@ import FinanceDataReader as fdr
 
 from ..exception.handler import handler
 
+import pymysql
+
+mysql_db = pymysql.connect(
+    user="root",
+    passwd="1234",
+    host="j5a602.p.ssafy.io",
+    port=3306,
+    db="bigdata",
+    charset="utf8"
+)
 
 class Service:
-    model = None
+    model3 = None
+    model7 = None
     def __init__(self):
-        def make_model(feature_shape, dropout=0.0):
-            model = Sequential()
-            model.add(LSTM(128,
-                           input_shape=(feature_shape[1], feature_shape[2]),  # Time Steps, Variables
-                           activation='relu',
-                           return_sequences=True
-                           )
-                      )
-            model.add(LSTM(128, activation='relu', return_sequences=True))
-            model.add(LSTM(16, activation='relu', return_sequences=False))
+        def make_model():
+            model3 = load_model(os.getcwd() + self.config.MODEL3)
+            model7 = load_model(os.getcwd() + self.config.MODEL7)
 
-            model.add(Dropout(dropout))
-            model.add(Dense(len(self.config.scale_cols)))
-            model.add(Activation('softmax'))
-
-            return model
+            return model3, model7
 
         self.config = conf()
 
-        Service.model = make_model([1, self.config.WINDOW_SIZE, len(self.config.scale_cols)], dropout=0.0)
-        Service.model.load_weights(self.config.WEIGHT_FILE)
+        Service.model3, Service.model7 = make_model()
+        print(self.config.WEIGHT_FILE3)
+        Service.model3.load_weights(os.getcwd() + self.config.WEIGHT_FILE3)
+        Service.model7.load_weights(os.getcwd() + self.config.WEIGHT_FILE7)
 
     def get_today(self, symbol):
         df = fdr.DataReader(symbol, datetime.today().date() + timedelta(days=-10))
@@ -47,68 +50,92 @@ class Service:
 
         return fdr_data
 
-    def predict(self, symbol):
-        WINSIZE = self.config.WINDOW_SIZE
+    def get_last_price(self, symbol, duration):
+        df = fdr.DataReader(symbol, datetime.today().date() + timedelta(days=-duration))
+
+        date = []
+        close = []
+
+        for i in range(len(df)):
+            date.append(str(datetime.date(df.index[i])))
+            close.append(int(df['Close'][i]))
+
+        return date, close
+
+    def predict(self, stock_name='삼성전자'):
         def make_test_dataset(data, window_size):
             feature_list = []
-            for i in range(len(data) - window_size + 1):
-                feature_list.append(np.array(data.iloc[i:i + window_size]))  # WINDOW_SIZE 만큼의 데이터씩 담기
+            for k in range(len(data) - window_size + 1):
+                feature_list.append(np.array(data.iloc[k:k + window_size]))  # WINDOW_SIZE 만큼의 데이터씩 담기
             return np.array(feature_list)
 
-        # 종목 과거 데이터 추출
+        cursor = mysql_db.cursor(pymysql.cursors.DictCursor)
+        sql = "select * from stock where name like '" + stock_name + "%'"
+        cursor.execute(sql)
+        stock_meta_data = cursor.fetchall()[0]
+
+        model = None
+        scale_cols = None
+        if stock_name in ['삼성전자', '카카오', '셀트리온']:           # 뉴스 데이터 분석 포함 예측 모델 사용
+            model = self.model3
+            scale_cols = self.config.scale_cols4
+        else:
+            model = self.model7
+            scale_cols = self.config.scale_cols3
+
+        predict_from_prev_day = 0
+
         prev_day = datetime.today() - timedelta(days=200)
-        df = fdr.DataReader(symbol, prev_day)
+        df = fdr.DataReader(stock_meta_data['symbol'], prev_day)
 
-        # Data Length Check
-        if len(df) <= WINSIZE + self.config.FORECAST:
-            handler.code(404, "this stock's deal duration is too short")
+        if len(df) <= self.config.WINDOW_SIZE + self.config.FORECAST: return []
 
-        # Data PreProcessing
-        real = df[-WINSIZE - self.config.FORECAST:len(df)]
-        test = self.pre_processing(real)[WINSIZE:]
+        real = df[-self.config.WINDOW_SIZE - predict_from_prev_day:]
+        real_compare = df[-self.config.WINDOW_SIZE - predict_from_prev_day:]
 
-        scaler_test = MinMaxScaler()
+        search_start_date = datetime.today().date() - timedelta(days=self.config.WINDOW_SIZE * 5)
+        sql = "select date_format(news_analysis.date, '%Y-%m-%d') AS date, score" \
+              " FROM news_analysis" \
+              " WHERE news_analysis.NAME LIKE '" + str(
+            stock_meta_data['NAME']) + "' AND news_analysis.date >= DATE('" + str(search_start_date) + "') " \
+                                                                                                       " ORDER BY date"
 
-        scaler_test.fit(test[self.config.scale_cols])
-        df_scaled = scaler_test.transform(test[self.config.scale_cols])
-        df_scaled = pd.DataFrame(df_scaled, columns=self.config.scale_cols, index=list(test.index.values))
+        cursor.execute(sql)
+        score_df = cursor.fetchall()[-self.config.WINDOW_SIZE - predict_from_prev_day:]
 
-        test_feature = make_test_dataset(df_scaled, WINSIZE)
+        tmp_df = []
+        for e in real.index:
+            flag = False
+            for e2 in score_df:
+                if str(e2['date']) == str(datetime.date(e)):
+                    flag = True
+                    tmp_df.append(e2['score'])
+                    break
+            if flag is False:
+                tmp_df.append(0.52)
 
-        # 모델로 FORECAST 만큼 예측하기
+        real['Score'] = tmp_df
+
+        scaler_real = MinMaxScaler()  # 정규화 : 데이터를 0 ~ 1 로 정규화
+
+        scaler_real.fit(real[scale_cols])
+        real_scaled = scaler_real.transform(real[scale_cols])
+        real_scaled = pd.DataFrame(real_scaled, columns=scale_cols, index=list(real.index.values))
+        test_feature = make_test_dataset(real_scaled, self.config.WINDOW_SIZE)
+
         for i in range(self.config.FORECAST):
-            print(test_feature.shape)
-            test_input = test_feature[0][i:].reshape(1, WINSIZE, len(self.config.scale_cols))
-            pred = Service.model.predict(test_input)
+            test_input = test_feature[0][i:].reshape(1, self.config.WINDOW_SIZE, len(scale_cols))
+            pred = model.predict(test_input)
 
-            while abs(pred[0][0]) < abs(pred[0][2]):
-                pred[0][0] += 0.000000001
-                pred[0][0] *= 2
-            while abs(pred[0][2]) * 10 < 0.4:
-                pred[0][2] += 0.000000001
-                pred[0][2] *= 10
+            test_feature = np.insert(test_feature, self.config.WINDOW_SIZE + i, pred[0], axis=1)
+            de_scaled_feature = scaler_real.inverse_transform(test_feature[0])
+            print(de_scaled_feature[self.config.WINDOW_SIZE + i])
 
-            test_feature = np.insert(test_feature, WINSIZE + i, pred[0], axis=1)
-            de_scaled_feature = scaler_test.inverse_transform(test_feature[0])
+            test_feature = test_feature.reshape(1, self.config.WINDOW_SIZE + (i + 1), len(scale_cols))
 
-            if de_scaled_feature[WINSIZE + i][1] >= 0.5:
-                pred[0][0] += pred[0][2]
-            else:
-                pred[0][0] -= pred[0][2]
+        de_scaled = scaler_real.inverse_transform(test_feature[0])
 
-            test_feature[0][WINSIZE + i][0] = pred[0][0]
-
-            test_feature = test_feature.reshape(1, WINSIZE + (i + 1), len(self.config.scale_cols))
-
-        test_feature[0] = scaler_test.inverse_transform(test_feature[0])
-
-        predict_stock = test['Close']
-        for i in range(self.config.FORECAST):
-                predict_stock = np.append(predict_stock, test_feature[0][WINSIZE + i][0])
-
-        return predict_stock
-
-
+        return de_scaled[:, 1], list(map(int, de_scaled[-self.config.FORECAST:, 1]))
 
 
     def pre_processing(self, real):

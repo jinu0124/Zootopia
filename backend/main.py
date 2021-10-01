@@ -7,9 +7,6 @@ from root.config.database import conf
 from root.database.conn import db
 from root.routers import stock
 
-# models.Base.metadata.create_all(bind=engine)
-
-
 def init_app():
     app = FastAPI()
 
@@ -18,7 +15,7 @@ def init_app():
     db.init_app(app, **conf_dict)
 
     origins = [
-        "http://localhost:5000",        # Frontend Origin
+        "http://localhost:8000",        # Frontend Origin
     ]
 
     app.add_middleware(

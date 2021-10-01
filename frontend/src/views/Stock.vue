@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="row stock_chart">
-                    <LineChart :height="400" class="col-md-8" :chart-data="datacollection"></LineChart>
+                    <LineChart :height="400" class="col-md-8" :chart-data="stock_graph"></LineChart>
                     <StockInfo v-bind:stockToday="stockToday"></StockInfo>
                 </div>
 
@@ -108,7 +108,7 @@ export default {
             status: "",
 
             searchWord: "삼성전자",
-            stockProfile: [],
+            stockProfile: {},
 
             duration: 1,            // 0: 1년, 1: 3개월, 2: 1개월, 3: 2주
 
@@ -126,17 +126,7 @@ export default {
                     '당기순이익', '배당률', '부채', '기업명'],
             finance_summary: {},
 
-            datacollection: {
-                labels: ["week 1", "week 2", "week 3", "week 4", "week 5", "week 6", "week 7", "week 8", "week 9", "week 10"],
-                datasets: [
-                {
-                    data: [30550, 31050, 30900, 32200, 31900, 32400, 33250, 32450, 32000, 32450],
-                    label: "KT",
-                    borderColor: "#3e95cd",
-                    fill: false
-                },
-                ]
-            },
+            stock_graph: {},
     
             pieChartAsk: 0,
             pieChartBid: 0,
@@ -153,63 +143,106 @@ export default {
             let data = await this.getStockProfile(searchWord)
             this.searchWord = data.NAME
 
-            let lastIdx = this.stockProfile.length
-            this.stockProfile.push(data)
+            this.stockProfile = data
 
-            this.socketConnect(lastIdx)
+            this.socketConnect()
+            
+            this.stockGraph(this.stockProfile.symbol)
 
-            this.getToday(this.stockProfile[lastIdx].symbol)
+            this.getToday(this.stockProfile.symbol)
 
             await this.financeInfo(data.NAME)
         },
-        async socketConnect(idx){
+        async stockGraph(symbol){
+            let dur = 2
+            if(this.duration == 0) dur = 14
+            else if(this.duration == 1) dur = 30
+            else if(this.duration == 2) dur = 91
+            else if(this.duration == 3) dur = 365
+
+            let res = await stock.getStockGraph(symbol, dur)
+
+            this.stock_graph = {
+                labels: res.data.date,
+                datasets: [
+                {
+                    data: res.data.close,
+                    label: this.stockProfile.NAME,
+                    borderColor: "#3e95cd",
+                    fill: false
+                },
+                ]
+            }
+
+            this.stockPredict(this.stockProfile.NAME)
+
+        },
+        async stockPredict(name){
+            let res = await stock.getstockPredict(name)
+            console.log(res)
+
+            // this.stock_graph.datasets[0].data = this.stock_graph.datasets[0].data.concat(res.data.close)
+            // this.stock_graph.labels = this.stock_graph.labels.concat(res.data.date)
+
+            console.log(this.stock_graph)
+            this.stock_graph = {
+                labels: this.stock_graph.labels.concat(res.data.date),
+                datasets: [
+                {
+                    data: this.stock_graph.datasets[0].data.concat(res.data.close),
+                    label: this.stockProfile.NAME,
+                    borderColor: "#3e95cd",
+                    fill: false
+                },
+                ]
+            }
+        },
+        async socketConnect(){
             if(this.socket != null) await this.socket.close()
 
             // 임시 테스트
-            let data = {
-                price: ["+77300", "+77400", "+77500", "+77600", "+77300", "+77400", "+77500", "+77600", "+77500", "+77600"],
-                volume: [468435,348643,156843,141580, 68435,108643,26843,24158, 56843,158],
-                updown: "bid",
-            }
+            // let data = {
+            //     price: ["+77300", "+77400", "+77500", "+77600", "+77300", "+77400", "+77500", "+77600", "+77500", "+77600"],
+            //     volume: [468435,348643,156843,141580, 68435,108643,26843,24158, 56843,158],
+            //     updown: "bid",
+            // }
             
-            if(data.updown == "bid"){                    
-                this.bidPrice = []
-                this.bidVolume = []
+            // if(data.updown == "bid"){                    
+            //     this.bidPrice = []
+            //     this.bidVolume = []
 
-                for(let i=data.price.length - 1; i>=0; i--){
-                    this.bidPrice[this.bidPrice.length] = data.price[i].substring(1,data.price[i].length)
-                }
-                for(let i=data.volume.length - 1; i>=0; i--){
-                    this.bidVolume[this.bidVolume.length] = data.volume[i];
-                }
-            }
-            data = {
-                price: ["-77300", "-77400", "-77500", "-77600", "-77300", "-77400", "-77500", "-77600", "-77500", "-77600"],
-                volume: [257435,25443,62843,12580, 4435,893,6843,458,8403,284],
-                updown: "ask",
-            }
-            if(data.updown == "ask"){
-                this.askPrice = []
-                this.askVolume = []
+            //     for(let i=data.price.length - 1; i>=0; i--){
+            //         this.bidPrice[this.bidPrice.length] = data.price[i].substring(1,data.price[i].length)
+            //     }
+            //     for(let i=data.volume.length - 1; i>=0; i--){
+            //         this.bidVolume[this.bidVolume.length] = data.volume[i];
+            //     }
+            // }
+            // data = {
+            //     price: ["-77300", "-77400", "-77500", "-77600", "-77300", "-77400", "-77500", "-77600", "-77500", "-77600"],
+            //     volume: [257435,25443,62843,12580, 4435,893,6843,458,8403,284],
+            //     updown: "ask",
+            // }
+            // if(data.updown == "ask"){
+            //     this.askPrice = []
+            //     this.askVolume = []
 
-                data.price.forEach(e => {
-                    this.askPrice[this.askPrice.length] = e.substring(1,e.length)
-                });
-                data.volume.forEach(e => {
-                    this.askVolume[this.askVolume.length] = e
-                });
-            }
+            //     data.price.forEach(e => {
+            //         this.askPrice[this.askPrice.length] = e.substring(1,e.length)
+            //     });
+            //     data.volume.forEach(e => {
+            //         this.askVolume[this.askVolume.length] = e
+            //     });
+            // }
 
-
-
-            this.socket = new WebSocket("ws://localhost:8081/stock/hoga/" + this.stockProfile[idx].symbol)
+            this.socket = new WebSocket("ws://localhost:8081/stock/hoga/" + this.stockProfile.symbol)
             this.socket.onopen = () => {
                 this.status = "connected";
                 let cnt = 0
                 this.socket.onmessage = ({data}) => {
                     cnt = 1 - cnt
                     if(cnt % 2 != 0) {
-                        this.getToday(this.stockProfile[idx].symbol)
+                        this.getToday(this.stockProfile.symbol)
                         console.log("내부")
                     }
                     // console.log(data)
