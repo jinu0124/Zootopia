@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 import requests
 import zipfile
 from io import BytesIO
@@ -11,13 +10,11 @@ import socket
 from fastapi import APIRouter, Depends, WebSocket
 from sqlalchemy.orm import Session
 
-from ..config.lstm_model import Config
 from ..database import stock_crud
 from ..exception.handler import handler
 from ..model import opendart
 from ..schema import stock
 from ..database.conn import db
-from ..schema.predict import Predict
 from ..service.stock_service import stock_service
 from ..service.dart_service import dart_service
 from ..service.kiwoom_service import k_win

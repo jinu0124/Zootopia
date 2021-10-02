@@ -3,9 +3,10 @@ from dataclasses import asdict
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from root.config.database import conf
-from root.database.conn import db
-from root.routers import stock
+from app.config.database import conf
+from app.database.conn import db
+from app.routers import stock
+
 
 def init_app():
     app = FastAPI()
@@ -36,5 +37,7 @@ def init_app():
 
 app = init_app()
 
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8081, reload=True)
+# if __name__ == "__main__":
+#     uvicorn.run("main:app", host="0.0.0.0", port=8081, reload=True)
+
+# gunicorn -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8081 --workers 4 --daemon
