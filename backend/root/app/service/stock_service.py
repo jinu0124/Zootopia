@@ -36,7 +36,7 @@ class Service:
         self.config = conf()
 
         Service.model3, Service.model7 = make_model()
-        print(self.config.WEIGHT_FILE3)
+        print(os.getcwd() + self.config.WEIGHT_FILE3)
         Service.model3.load_weights(os.getcwd() + self.config.WEIGHT_FILE3)
         Service.model7.load_weights(os.getcwd() + self.config.WEIGHT_FILE7)
 
@@ -129,34 +129,13 @@ class Service:
 
             test_feature = np.insert(test_feature, self.config.WINDOW_SIZE + i, pred[0], axis=1)
             de_scaled_feature = scaler_real.inverse_transform(test_feature[0])
-            print(de_scaled_feature[self.config.WINDOW_SIZE + i])
+            # print(de_scaled_feature[self.config.WINDOW_SIZE + i])
 
             test_feature = test_feature.reshape(1, self.config.WINDOW_SIZE + (i + 1), len(scale_cols))
 
         de_scaled = scaler_real.inverse_transform(test_feature[0])
 
         return de_scaled[:, 1], list(map(int, de_scaled[-self.config.FORECAST:, 1]))
-
-
-    def pre_processing(self, real):
-        real['Updown'] = real['Close'] - real['Open']
-        for i in range(len(real['Updown'])):
-            real['Updown'].iloc[i] = 1 if real['Updown'][i] >= 0 else 0
-
-        diff = abs(real['Close'][1:].values - real['Close'][0:-1].values)
-        diff = np.insert(diff, 0, 0, axis=0)
-        real['Diff'] = diff
-
-        befo = real['Close'][1:].values - real['Close'][0:-1].values
-        for i in range(0, len(real['Close']) - 1):
-            if real['Close'][i + 1] - real['Close'][i] >= 0:
-                befo[i] = 1
-            else:
-                befo[i] = 0
-        befo = np.insert(befo, 0, 0, axis=0)
-        real['Befo'] = befo
-
-        return real
 
 
 stock_service = Service()

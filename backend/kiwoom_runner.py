@@ -55,7 +55,7 @@ class MyWindow(QMainWindow):
             self.getTenTimeHoga(req_decode['symbol'])
 
             while True:
-                time.sleep(1)         # 1초마다 발신
+                time.sleep(0.7)         # 0.7초마다 발신
                 try:
                     if len(self.ask[req_decode['symbol']]) == 0:
                         client_socket.send(json.dumps([]).encode('utf-8'))
