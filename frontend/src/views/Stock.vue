@@ -193,7 +193,7 @@ export default {
         async socketConnect(){
             if(this.socket != null) await this.socket.close()
 
-            this.socket = new WebSocket("ws://localhost:8081/stock/hoga/" + this.stockProfile.symbol)
+            this.socket = new WebSocket("ws://localhost:8080/stock/hoga/" + this.stockProfile.symbol)
             this.socket.onopen = () => {
                 this.status = "connected";
                 let cnt = 0
