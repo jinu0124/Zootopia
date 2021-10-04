@@ -21,7 +21,7 @@ from ..service.kiwoom_service import k_win
 
 router = APIRouter()
 
-host = "127.0.0.1"
+host = "3.37.16.32"
 port = 4000
 
 url = 'https://opendart.fss.or.kr/api/corpCode.xml'

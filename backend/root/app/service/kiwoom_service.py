@@ -2,9 +2,6 @@ import json
 import ast
 import socket
 
-host = "127.0.0.1"
-port = 4000
-
 class Kiwoom():
     def __init__(self):
         super().__init__()

@@ -9,7 +9,7 @@ import ast
 import socket
 import threading
 import time
-host = "127.0.0.1"
+host = "ec2-3-37-16-32.ap-northeast-2.compute.amazonaws.com"
 port = 4000
 
 class MyWindow(QMainWindow):
