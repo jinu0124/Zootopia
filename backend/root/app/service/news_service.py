@@ -79,11 +79,16 @@ class News:
     def pos_neg(self, df):
         positive_words = np.hstack(df[df.score >= 0.5]['tokenized'].values)
         negative_words = np.hstack(df[df.score <= 0.5]['tokenized'].values)
+        total_words = np.hstack(df['tokenized'].values)
+
         positive_count = Counter(positive_words)
         negative_count = Counter(negative_words)
+        word_count = Counter(total_words)
+
         pos30 = positive_count.most_common(30)
         neg30 = negative_count.most_common(30)
-        return [pos30, neg30]
+        word_count30 = word_count.most_common(30)
+        return {'pos30': pos30, 'neg30': neg30, 'word_count30': word_count30}
 
     def predict_score(self, df):
         test_x = df['tokenized'].values

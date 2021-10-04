@@ -30,16 +30,18 @@ async def news_predict(search_word: str):
 
     # 형태소 분석
     df = news_service.morphs_nlp(df)
-
+    print('### df[0]: ', df.iloc[0])
     # 평균점수
     score_mean = news_service.predict_score(df)
+    print('### score_mean: ', score_mean)
     # 긍부정 비율
-    positive_ratio = news_service.ratio['positive_ratio']
-    negaitive_ratio = news_service.ratio['negaitive_ratio']
+    positive_ratio = news_service.ratio(df)['positive_ratio']
+    negaitive_ratio = news_service.ratio(df)['negaitive_ratio']
     # 워드클라우드용 긍부정 데이터 수
-    pos_word30 = news_service.pos_neg[0]
-    neg_word30 = news_service.pos_neg[1]
+    pos_word30 = news_service.pos_neg(df)['pos30']
+    neg_word30 = news_service.pos_neg(df)['neg30']
+    word_count30 = news_service.pos_neg(df)['word_count30']
 
     print(positive_ratio, " / ", negaitive_ratio)
 
-    return {'score_mean': score_mean, 'positive_ratio': positive_ratio, 'negaitive_ratio': negaitive_ratio, 'pos_word30': pos_word30, 'neg_word30': neg_word30}
+    return {'score_mean': score_mean, 'positive_ratio': positive_ratio, 'negaitive_ratio': negaitive_ratio, 'pos_word30': pos_word30, 'neg_word30': neg_word30, 'word_count30': word_count30}
