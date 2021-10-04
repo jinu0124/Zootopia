@@ -1,12 +1,12 @@
 <template>
     <div class="stock_info" style="">
-        <p>긍정 뉴스</p>
-        <p>Positive</p>
+        <p style="font-size: 24px;">긍정 뉴스</p>
+        <p style="color: blue;">Positive</p>
         <ul>
-            <li><div class="info_title">뉴스1</div>&nbsp;{{positiveNews.First}}&nbsp;</li>
-            <li><div class="info_title">뉴스2</div>&nbsp;{{positiveNews.Second}}&nbsp;</li>
-            <li><div class="info_title">뉴스3</div>&nbsp;{{positiveNews.Third}}&nbsp;</li>
-            <li><div class="info_title">뉴스4</div>&nbsp;{{positiveNews.Fourth}}&nbsp;</li>
+            <li><div class="info_title">뉴스1</div>&nbsp;{{ positiveNews[0] }}&nbsp;</li>
+            <li><div class="info_title">뉴스2</div>&nbsp;{{ positiveNews[1] }}&nbsp;</li>
+            <li><div class="info_title">뉴스3</div>&nbsp;{{ positiveNews[2] }}&nbsp;</li>
+            <li><div class="info_title">뉴스4</div>&nbsp;{{ positiveNews[3] }}&nbsp;</li>
         </ul>
     </div>
 </template>
@@ -15,7 +15,7 @@
 export default {   
     name: "PositiveNews",
     props:{
-        positiveNews: Object
+        positiveNews: Array
     },
     data(){
         return{
