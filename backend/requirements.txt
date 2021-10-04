@@ -16,3 +16,5 @@ sqlalchemy==1.4.22
 xmltodict
 opendartreader
 cryptography
+konlpy
+

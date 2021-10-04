@@ -6,6 +6,7 @@ from starlette.middleware.cors import CORSMiddleware
 from app.config.database import conf
 from app.database.conn import db
 from app.routers import stock
+from app.routers import news
 
 
 def init_app():
@@ -29,6 +30,7 @@ def init_app():
 
     # 라우터
     app.include_router(stock.router, prefix='/stock', tags=['stocks'])
+    app.include_router(news.router, prefix='/news', tags=['news'])
 
     return app
 
