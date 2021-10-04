@@ -3,6 +3,7 @@ from collections import Counter
 from keras_preprocessing.sequence import pad_sequences
 from keras_preprocessing.text import Tokenizer
 import re
+from tensorflow.keras.models import load_model
 from konlpy.tag import Okt
 import datetime as dt
 import requests
@@ -10,6 +11,7 @@ import pandas as pd
 import h5py
 
 class News:
+
     global client_id
     global client_secret
     client_id = "vKllKxKbERYB7fpkEQO4"
@@ -92,7 +94,7 @@ class News:
         total_cnt = len(tokenizer.word_index)
         vocab_size = total_cnt
 
-        while len(vocab_size > 2600):
+        while vocab_size > 2600:
             rare_cnt = 0 # 빈도수가 threshold보다 작은 단어의 개수를 카운트
             total_freq = 0 # 총 단어 빈도수 총 합
             rare_freq = 0 # 등장 빈도수가 threshold보다 작은 단어의 등장 빈도수의 총 합
@@ -116,10 +118,10 @@ class News:
         # 크롤링 페이지의 기사 길이 확인하고 수정하기!!!!!!!!!!!!!!!!!!!!!!!111
         max_len = max(len(l) for l in test_x)
         test_x = pad_sequences(test_x, maxlen = max_len)
-        #score_model = load_model('news_model.5')
+        #score_model = load_model('filename.5')
         filename = "C:/Users/multicampus/Documents/S05P21A602/backend/root/app/service/news_model.h5"
-
-        score_model = h5py.File(filename, 'r')
+        score_model = load_model(filename)
+        #score_model = h5py.File(filename, 'r')
 
         score = score_model.predict(test_x)
         score = score.tolist()
@@ -136,7 +138,7 @@ class News:
 
         print('긍정 기사 비율 : ', positive_ratio, "% ")
         print('부정 기사 비율 : ', negaitive_ratio, "% ")
-        return [positive_ratio, negaitive_ratio]
+        return {'positive_ratio': positive_ratio, 'negaitive_ratio': negaitive_ratio}
 
 
 news_service = News()
