@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="page">
         <div class="row">
             <Sidebar></Sidebar>
         </div>
@@ -15,19 +15,19 @@
         <div class="row count">
             <div class="count_box">
                 <p>검색된 기사 개수</p>
-                <p>60</p>
+                <p>{{ totalNews }}</p>
             </div>
             <div class="count_box">
                 <p>분석된 단어 개수</p>
-                <p>16</p>
+                <p>{{ analyzeWord }}</p>
             </div>
             <div class="count_box">
                 <p>긍정 기사 개수</p>
-                <p>43</p>
+                <p>{{ posVolume }}</p>
             </div>
             <div class="count_box">
                 <p>부정 기사 개수</p>
-                <p>64</p>
+                <p>{{ negVolume }}</p>
             </div>
         </div>
         <div class="row middle">
@@ -41,16 +41,13 @@
                 </div>
                 <div class="chart_score_positon">
                     <div class="pie_chart_box">
-                        <article id="pieChart">
-                        <h3 class="text-left text-bold">{{ msg }}</h3>
-                            <div class="flex flex-col">
-                                <!-- <Pie></Pie> -->
+                            <div class="pie_chart">
+                                <Pie :data="chartData" :options="chartOptions"></Pie>
                             </div>
-                        </article>
                     </div>
                     <div class="score_box">
                         <div class="score">Score</div>
-                        <div class="grade">80점</div>
+                        <div class="grade">{{ grade }}점</div>
                     </div>
                 </div>
             </div>
@@ -74,6 +71,7 @@ import Sidebar from "../components/Sidebar.vue"
 import SearchBar from "../components/Searchbar.vue"
 import stock from "../api/stock"
 import WordCloud from "vue-wordcloud"
+import Pie from "../components/Pie.js"
 import PositiveNews from "../components/PositiveNews.vue"
 import NegativeNews from "../components/NegativeNews.vue"
 
@@ -83,6 +81,7 @@ export default {
         Sidebar,
         SearchBar,
         WordCloud,
+        Pie,
         PositiveNews,
         NegativeNews
     },
@@ -90,9 +89,6 @@ export default {
         return{
 
             searchWord: "삼성전자",
-
-            positiveNews: {},
-            negativeNews: {},
 
             myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef'],
             defaultWords: [{
@@ -134,7 +130,32 @@ export default {
             ],
 
             now: this.$moment(new Date()).format("DD MMM YYYY HH:mm:ss"),
-            msg: "pie chart 자리",
+
+            totalNews: 60,
+            analyzeWord: 16,
+            posVolume: 43,
+            negVolume: 64,
+
+            chartOptions: {
+                hoverBorderWidth: 20
+            },
+            chartData: {
+                hoverBackgroundColor: "red",
+                hoverBorderWidth: 10,
+                labels: ["Green", "Red", "Blue"],
+                datasets: [
+                    {
+                        label: "Data One",
+                        backgroundColor: ["#41B883", "#E46651", "#00D8FF"],
+                        data: [1, 10, 5]
+                    }
+                ]
+            },
+
+            grade: 80,
+
+            positiveNews: ["https://www.naver.com/", "https://www.google.co.kr/", "https://www.acmicpc.net/", "https://programmers.co.kr/"],
+            negativeNews: ["https://github.com/", "https://jasoseol.com/", "https://edu.ssafy.com/", "https://www.notion.so/"]
         }
     },
     methods:{
@@ -151,9 +172,6 @@ export default {
         // }
     },
     watch:{
-
-    },
-    created(){
     },
     mounted(){
         setInterval(() => {
@@ -164,6 +182,10 @@ export default {
 </script>
 
 <style>
+.page{
+    background-color: rgb(245, 250, 248);
+}
+
 .stock_remark_title{
     position:relative;
     top:120px;
@@ -194,14 +216,16 @@ input {
     border: 1px solid;
     text-align: center;
     margin: 0 5px;
-    background-color: rgb(245, 250, 248);
+    /* background-color: rgb(245, 250, 248); */
+    background-color: white;
     /* border-radius: 0 15% 15% 0; */
     border: white 1px solid;
 }
 
 .middle{
     margin-top: 180px;
-    background-color: rgb(245, 250, 248);
+    /* background-color: rgb(245, 250, 248); */
+    background-color: white;
     border-radius: 0 15% 15% 0;
     border: white 1px solid;
     padding-top: 20px;
@@ -243,6 +267,15 @@ input {
     border: 1px solid;
 }
 
+.pie_chart{
+    margin: 0;
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+}
+
 .score_box{
     position: relative;
     height: 40%;
@@ -250,6 +283,7 @@ input {
     text-align: center;
     display: flex;
     flex-direction: column;
+    display: block;
 }
 
 .score{
@@ -268,9 +302,10 @@ input {
 
 .PnN_news{
     margin-top: 40px;
-    background-color: rgb(245, 250, 248);
+    /* background-color: rgb(245, 250, 248); */
+    /* background-color: white; */
     border-radius: 0 15% 15% 0;
-    border: white 1px solid;
+    /* border: white 1px solid; */
     padding-top: 20px;
     padding-bottom: 20px;
 }
@@ -287,6 +322,7 @@ input {
     width : 49%;
     border: 1px solid;
     margin: 0 5px;
+    background-color: white;
 }
 
 

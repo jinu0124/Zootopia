@@ -1,40 +1,16 @@
-import { Pie } from "vue-chartjs";
+import { Doughnut } from "vue-chartjs";
 
 export default {
   name: "Pie",
-  extends: Pie,
-  data() {
-    return {
-      stats: [],
-      chartdata: {
-        labels: [],
-        datasets: [
-          {
-            label: [],
-            data: [],
-            backgroundColor: [],
-          },
-        ],
-      },
-      options: {
-        hoverBorderWidth: 20,
-        responsive: true,
-        maintainAspectRatio: false,
-      },
-    };
-  },
+  extends: Doughnut,
+  props: ['data', 'options'],
   mounted() {
-    this.renderChart(this.chartdata, this.options);
-  },
-  created() {
-    this.stats = this.$store.state.categories;
-    const obj = this.chartdata.datasets[0];
-
-    for (const stat of this.stats) {
-      this.chartdata.labels.push(stat.title);
-      obj.label.push(stat.title);
-      obj.data.push(stat.value);
-      obj.backgroundColor.push(stat.backgroundColor);
-    }
-  },
+    // this.chartData is created in the mixin.
+    // If you want to pass options please create a local options object
+    this.renderChart(this.data, {
+      borderWidth: "10px",
+      hoverBackgroundColor: "red",
+      hoverBorderWidth: "10px"
+    });
+  }
 };
