@@ -36,16 +36,8 @@
                 <div class="word_cloud_remark col-md-7">of {{now}} AM</div>
             </div>
             <div class="row word_cloud_chart">
-                <div class="word_cloud_position">
-                    WordCloud 자리
-                    <WordCloud v-on:update="wordClickHandler"
-                        :data="defaultWords"
-                        nameKey="name"
-                        valueKey="value"
-                        :color="myColors"
-                        :showTooltip="true"
-                        >
-                    </WordCloud>
+                <div class="word_cloud_position col-md-8">
+                    <word-cloud :data="defaultWords" :myColors="myColors"></word-cloud>
                 </div>
                 <div class="chart_score_positon">
                     <div class="pie_chart_box">
@@ -81,8 +73,7 @@
 import Sidebar from "../components/Sidebar.vue"
 import SearchBar from "../components/Searchbar.vue"
 import stock from "../api/stock"
-import WordCloud from "../components/WordCloud.js"
-// import Pie from "../components/Pie.js"
+import WordCloud from "vue-wordcloud"
 import PositiveNews from "../components/PositiveNews.vue"
 import NegativeNews from "../components/NegativeNews.vue"
 
@@ -92,7 +83,6 @@ export default {
         Sidebar,
         SearchBar,
         WordCloud,
-        // Pie,
         PositiveNews,
         NegativeNews
     },
@@ -101,48 +91,47 @@ export default {
 
             searchWord: "삼성전자",
 
-            // 임시 테스트
-            myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef'],
-            defaultWords: [{
-            "name": "Cat",
-            "value": 26
-          },
-          {
-            "name": "fish",
-            "value": 19
-          },
-          {
-            "name": "things",
-            "value": 18
-          },
-          {
-            "name": "look",
-            "value": 16
-          },
-          {
-            "name": "two",
-            "value": 15
-          },
-          {
-            "name": "fun",
-            "value": 9
-          },
-          {
-            "name": "know",
-            "value": 9
-          },
-          {
-            "name": "good",
-            "value": 9
-          },
-          {
-            "name": "play",
-            "value": 6
-          }
-        ],
-
             positiveNews: {},
             negativeNews: {},
+
+            myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef'],
+            defaultWords: [{
+                "name": "Cat",
+                "value": 26
+                },
+                {
+                "name": "fish",
+                "value": 19
+                },
+                {
+                "name": "things",
+                "value": 18
+                },
+                {
+                "name": "look",
+                "value": 16
+                },
+                {
+                "name": "two",
+                "value": 15
+                },
+                {
+                "name": "fun",
+                "value": 9
+                },
+                {
+                "name": "know",
+                "value": 9
+                },
+                {
+                "name": "good",
+                "value": 9
+                },
+                {
+                "name": "play",
+                "value": 6
+                }
+            ],
 
             now: this.$moment(new Date()).format("DD MMM YYYY HH:mm:ss"),
             msg: "pie chart 자리",
