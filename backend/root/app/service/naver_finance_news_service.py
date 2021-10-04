@@ -109,9 +109,9 @@ def testurl():
 # testurl()
 
 
-fin = Finance_news()
+finance_news = Finance_news()
 
-fin.crawler('035720', 1, timedelta(days=1)) # 카카오
-# fin.crawler('068270', 1, timedelta(days=1)) # 셀트리온
-# fin.crawler('035420', 1, timedelta(days=1)) # 네이버
+# finance_news.crawler('035720', 1, timedelta(days=1)) # 카카오
+# finance_news.crawler('068270', 1, timedelta(days=1)) # 셀트리온
+# finance_news.crawler('035420', 1, timedelta(days=1)) # 네이버
 
