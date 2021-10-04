@@ -8,7 +8,6 @@ from konlpy.tag import Okt
 import datetime as dt
 import requests
 import pandas as pd
-import h5py
 
 class News:
 
@@ -21,9 +20,7 @@ class News:
 
     def __init__(self):
         filename = "C:/Users/multicampus/Documents/S05P21A602/backend/root/app/service/news_model.h5"
-
-        h5 = h5py.File(filename, 'r')
-        # score_model = load_model('news_model.h5')
+        score_model = load_model(filename)
 
     def getNaverSearchNews(self, search_word, page_start, display):
         headers = {'X-Naver-Client-Id' : client_id,
@@ -123,10 +120,9 @@ class News:
         # 크롤링 페이지의 기사 길이 확인하고 수정하기!!!!!!!!!!!!!!!!!!!!!!!111
         max_len = max(len(l) for l in test_x)
         test_x = pad_sequences(test_x, maxlen = max_len)
-        #score_model = load_model('filename.5')
+
         filename = "C:/Users/multicampus/Documents/S05P21A602/backend/root/app/service/news_model.h5"
         score_model = load_model(filename)
-        #score_model = h5py.File(filename, 'r')
 
         score = score_model.predict(test_x)
         score = score.tolist()
