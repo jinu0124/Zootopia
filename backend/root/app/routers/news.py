@@ -21,12 +21,12 @@ async def news_predict(search_word: str):
 
     while news_service.checkDate(df):
         page_count += 1
-        new_news = news_service.getNaverSearchNews('셀트리온', page_count, 30)
+        new_news = news_service.getNaverSearchNews(search_word, page_count, 30)
         df = news_service.DFconcat(df, new_news)
 
     days_2ago = (dt.datetime.today() - dt.timedelta(days=2)).strftime('%Y-%m-%d')
-    df = df[df['pubDate'] >= days_2ago].reset_index(drop=True)
-    print("df 길이는 ---------> ", len(df))
+    df = df[df['pubDate'] >= days_2ago].reset_index(drop=True)[:200]
+    print("df 길이는 200! ---------> ", len(df))
 
     # 형태소 분석
     df = news_service.morphs_nlp(df)
@@ -37,11 +37,16 @@ async def news_predict(search_word: str):
     # 긍부정 비율
     positive_ratio = news_service.ratio(df)['positive_ratio']
     negaitive_ratio = news_service.ratio(df)['negaitive_ratio']
-    # 워드클라우드용 긍부정 데이터 수
-    pos_word30 = news_service.pos_neg(df)['pos30']
-    neg_word30 = news_service.pos_neg(df)['neg30']
-    word_count30 = news_service.pos_neg(df)['word_count30']
 
-    print(positive_ratio, " / ", negaitive_ratio)
+    # 워드클라우드용 긍부정 기사수
+    pos_neg = news_service.pos_neg(df)
+    pos_count= pos_neg['pos_count']
+    neg_count = pos_neg['neg_count']
+    word_cloud30 = pos_neg['word_cloud30']
+    pos_link = pos_neg['pos_link']
+    neg_link = pos_neg['neg_link']
 
-    return {'score_mean': score_mean, 'positive_ratio': positive_ratio, 'negaitive_ratio': negaitive_ratio, 'pos_word30': pos_word30, 'neg_word30': neg_word30, 'word_count30': word_count30}
+    return {'total_count': len(df), 'score_mean': score_mean,
+            'positive_ratio': positive_ratio, 'negaitive_ratio': negaitive_ratio,
+            'pos_count': pos_count, 'neg_count': neg_count, 'word_cloud30': word_cloud30,
+            'pos_link': pos_link, 'neg_link': neg_link }

@@ -50,7 +50,7 @@ class News:
         return df
 
     def checkDate(self, df):
-        if df.iloc[-1, -1] < days_2ago:
+        if (df.iloc[-1, -1] < days_2ago) or (len(df) > 200):
             return False
         else: return True
 
@@ -74,18 +74,16 @@ class News:
         return df
 
     def pos_neg(self, df):
-        positive_words = np.hstack(df[df.score >= 0.5]['tokenized'].values)
-        negative_words = np.hstack(df[df.score <= 0.5]['tokenized'].values)
+        pos = len(df[df.score > 0.5])
+        neg = len(df[df.score < 0.5])
         total_words = np.hstack(df['tokenized'].values)
 
-        positive_count = Counter(positive_words)
-        negative_count = Counter(negative_words)
-        word_count = Counter(total_words)
+        pos_link = df[df.score > 0.6]['link'][:10]
+        neg_link = df[df.score > 0.6]['link'][:10]
 
-        pos30 = positive_count.most_common(30)
-        neg30 = negative_count.most_common(30)
-        word_count30 = word_count.most_common(30)
-        return {'pos30': pos30, 'neg30': neg30, 'word_count30': word_count30}
+        word_count = Counter(total_words)
+        word_cloud30 = word_count.most_common(30)
+        return {'pos_count': pos, 'neg_count': neg, 'word_cloud30': word_cloud30, 'pos_link': pos_link, 'neg_link': neg_link }
 
     def predict_score(self, df):
         test_x = df['tokenized'].values
