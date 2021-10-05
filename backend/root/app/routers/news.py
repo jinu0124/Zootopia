@@ -35,9 +35,11 @@ async def news_predict(search_word: str):
     # 평균점수
     score_mean = news_service.predict_score(df)
     print('### score_mean: ', score_mean)
+
     # 긍부정 비율
-    positive_ratio = news_service.ratio(df)['positive_ratio']
-    negaitive_ratio = news_service.ratio(df)['negaitive_ratio']
+    ratio = news_service.ratio(df)
+    positive_ratio = ratio['positive_ratio']
+    negaitive_ratio = ratio['negaitive_ratio']
 
     # 워드클라우드용 긍부정 기사수
     pos_neg = news_service.pos_neg(df)
