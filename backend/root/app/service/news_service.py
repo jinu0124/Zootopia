@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from collections import Counter
 from keras_preprocessing.sequence import pad_sequences
@@ -18,9 +19,9 @@ class News:
     global days_2ago
     days_2ago = (dt.datetime.today() - dt.timedelta(days=2)).strftime('%Y-%m-%d')
 
-    def __init__(self):
-        filename = "C:/Users/multicampus/Documents/S05P21A602/backend/root/app/service/news_model.h5"
-        score_model = load_model(filename)
+    # def __init__(self):
+    #     filename = os.getcwd() + "app/service/news_model.h5"
+    #     score_model = load_model(filename)
 
     def getNaverSearchNews(self, search_word, page_start, display):
         headers = {'X-Naver-Client-Id' : client_id,

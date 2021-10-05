@@ -9,7 +9,7 @@ class Kiwoom():
     def getTenTimeHoga(self, client_socket):
         print("Server : 호가 정보 받기 전 대기")
         try:
-            client_socket.settimeout(3)                   # timeout 설정
+            #client_socket.settimeout(3)                   # timeout 설정
             ask = client_socket.recv(1024)
             if len(ask) <= 2:
                 return [], []
