@@ -89,7 +89,7 @@ class News:
         pos_link = list(np.array(positive['link'].tolist()))
         pos_title = [sentence.replace('<b>','').replace('</b>','') for sentence in list(np.array(positive['title'].tolist()))]
         neg_link = list(np.array(negative['link'].tolist()))
-        neg_title = [sentence.replace('<b>','').replace('</b>','') for sentence in list(np.array(negative['title'].tolist()))]
+        neg_title = [sentence.replace('<b>','').replace('</b>','').replace('&quot','') for sentence in list(np.array(negative['title'].tolist()))]
 
         word_count = Counter(np.hstack(df['tokenized'].values)).most_common(50)
         for i in word_count:
@@ -144,7 +144,7 @@ class News:
         return {'df': df, 'vocab_size': vocab_size}
 
     def today_score(self, df):
-        score_mean = np.mean(df['score'])
+        score_mean = round(np.mean(df['score']), 2)*100
         return score_mean
 
     def date_score(self, df):

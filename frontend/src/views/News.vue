@@ -52,7 +52,7 @@
                     <PositiveNews :positiveNews="positiveTitle"></PositiveNews>
                 </div>
                 <div class="news_list col-md-6">
-                    <NegativeNews :negativeNews="positiveTitle"></NegativeNews>
+                    <NegativeNews :negativeNews="negativeTitle"></NegativeNews>
                 </div>
             </div>
         </div>
@@ -169,7 +169,7 @@ export default {
         async searchStock(searchWord){
             let data = await this.getSearchNewsInfo(searchWord)
             this.totalNews = data.total_count
-            this.score = data.score_mean
+            this.score = data.score_mean.toFixed(2)
             this.vocab_size = data.vocab_size
             this.positiveNews =  data.pos_link
             this.positiveTitle = data.pos_title
@@ -194,7 +194,8 @@ export default {
         setInterval(() => {
             this.now = this.$moment(new Date()).format("DD MMM YYYY HH:mm:ss")
         }, 1000),
-        this.getSearchNewsInfo('주식')
+
+        this.searchStock('코스피')
     }
 }
 </script>
