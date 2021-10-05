@@ -81,6 +81,8 @@
 </template>
 
 <script>
+/* eslint-disable */
+
 import Sidebar from "../components/Sidebar.vue"
 import SearchBar from "../components/Searchbar.vue"
 import stock from "../api/stock"

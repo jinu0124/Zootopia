@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 from collections import Counter
 from keras_preprocessing.sequence import pad_sequences
@@ -16,6 +18,7 @@ class News:
 
     global client_id
     global client_secret
+    global vocab_size
     client_id = "vKllKxKbERYB7fpkEQO4"
     client_secret = "K4jATtYNtv"
     global days_2ago
@@ -53,7 +56,7 @@ class News:
         return df
 
     def checkDate(self, df):
-        if (df.iloc[-1, -1] < days_2ago) or (len(df) > 200):
+        if (df.iloc[-1, -1] < days_2ago) or (len(df) > 100):
             return False
         else: return True
 
@@ -77,16 +80,22 @@ class News:
         return df
 
     def pos_neg(self, df):
-        pos = len(df[df.score > 0.5])
-        neg = len(df[df.score < 0.5])
-        total_words = np.hstack(df['tokenized'].values)
+        word_cloud = []
+        pos = len(df[df.score > 0.54])
+        neg = len(df[df.score < 0.51])
+        positive = df[df.score > 0.54][:10]
+        negative = df[df.score < 0.51][:10]
 
-        pos_link = df[df.score > 0.6]['link'][:10]
-        neg_link = df[df.score > 0.6]['link'][:10]
+        pos_link = list(np.array(positive['link'].tolist()))
+        pos_title = [sentence.replace('<b>','').replace('</b>','') for sentence in list(np.array(positive['title'].tolist()))]
+        neg_link = list(np.array(negative['link'].tolist()))
+        neg_title = [sentence.replace('<b>','').replace('</b>','') for sentence in list(np.array(negative['title'].tolist()))]
 
-        word_count = Counter(total_words)
-        word_cloud30 = word_count.most_common(30)
-        return {'pos_count': pos, 'neg_count': neg, 'word_cloud30': word_cloud30, 'pos_link': pos_link, 'neg_link': neg_link }
+        word_count = Counter(np.hstack(df['tokenized'].values)).most_common(50)
+        for i in word_count:
+            word_cloud.append({"name": i[0], "value": i[1]})
+        return {'pos_count': pos, 'neg_count': neg, 'word_cloud': word_cloud,
+                'pos_link': pos_link, 'pos_title': pos_title, 'neg_link': neg_link, 'neg_title': neg_title}
 
     def predict_score(self, df):
         test_x = df['tokenized'].values
@@ -113,7 +122,7 @@ class News:
             threshold += 1
 
             vocab_size = total_cnt - rare_cnt + 2
-            print('단어 집합의 크기 :', vocab_size)
+        print('단어 집합의 크기 :', vocab_size)
 
         tokenizer = Tokenizer(vocab_size, oov_token = 'OOV')
         tokenizer.fit_on_texts(test_x)
@@ -132,19 +141,19 @@ class News:
         score = sum(score, [])
         df['score'] = score
 
-        return df
+        return {'df': df, 'vocab_size': vocab_size}
 
     def today_score(self, df):
         score_mean = np.mean(df['score'])
         return score_mean
 
     def date_score(self, df):
-        date_mean = df[['pubDate','score']].groupby('pubDate').mean().reset_index(drop=False)
+        date_mean = math.floor(df[['pubDate', 'score']].groupby('pubDate').mean().reset_index(drop=False))
         return date_mean
 
     def ratio(self, df):
-        positive_ratio = len(df[df['score'] >= 0.51])/len(df)*100
-        negaitive_ratio = len(df[df['score'] < 0.51])/len(df)*100
+        positive_ratio = round(len(df[df['score'] > 0.53])/len(df)*100, 2)
+        negaitive_ratio = round(len(df[df['score'] < 0.51])/len(df)*100, 2)
 
         print('긍정 기사 비율 : ', positive_ratio, "% ")
         print('부정 기사 비율 : ', negaitive_ratio, "% ")

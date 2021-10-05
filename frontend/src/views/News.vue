@@ -13,15 +13,15 @@
             </div>
             <div class="count_box">
                 <p>분석된 단어 개수</p>
-                <p>{{ analyzeWord }}</p>
+                <p>{{ vocab_size }}</p>
             </div>
             <div class="count_box">
                 <p>긍정 기사 개수</p>
-                <p>{{ posVolume }}</p>
+                <p>{{ pos_count }}</p>
             </div>
             <div class="count_box">
                 <p>부정 기사 개수</p>
-                <p>{{ negVolume }}</p>
+                <p>{{ neg_count }}</p>
             </div>
         </div>
         <div class="row middle">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="score_box">
                         <div class="score">Score</div>
-                        <div class="grade">{{ grade }}점</div>
+                        <div class="grade">{{ score }}점</div>
                     </div>
                 </div>
             </div>
@@ -49,10 +49,10 @@
         <div class="row PnN_news">
             <div class="row news">
                 <div class="news_list col-md-6">
-                    <PositiveNews :positiveNews="positiveNews"></PositiveNews>
+                    <PositiveNews :positiveNews="positiveTitle"></PositiveNews>
                 </div>
                 <div class="news_list col-md-6">
-                    <NegativeNews :negativeNews="negativeNews"></NegativeNews>
+                    <NegativeNews :negativeNews="positiveTitle"></NegativeNews>
                 </div>
             </div>
         </div>
@@ -61,6 +61,8 @@
 
 
 <script>
+/* eslint-disable */
+
 import Sidebar from "../components/Sidebar.vue"
 import SearchBar from "../components/Searchbar.vue"
 import stock from "../api/stock"
@@ -68,6 +70,7 @@ import WordCloud from "vue-wordcloud"
 import Pie from "../components/Pie.js"
 import PositiveNews from "../components/PositiveNews.vue"
 import NegativeNews from "../components/NegativeNews.vue"
+import news from "../api/news"
 
 export default {
     name: "News",
@@ -82,7 +85,7 @@ export default {
     data(){
         return{
 
-            searchWord: "삼성전자",
+            searchWord: "주식",
 
             myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef'],
             defaultWords: [{
@@ -126,10 +129,12 @@ export default {
             now: this.$moment(new Date()).format("DD MMM YYYY HH:mm:ss"),
 
             totalNews: 60,
-            analyzeWord: 16,
-            posVolume: 43,
-            negVolume: 64,
-
+            score: 0,
+            vocab_size: 0,
+            pos_count: 0,
+            neg_count: 0,
+            positiveTitle: [],
+            negativeTitle: [],
             chartOptions: {
                 hoverBorderWidth: 20
             },
@@ -141,25 +146,43 @@ export default {
                     {
                         label: "Data One",
                         backgroundColor: ["#41B883", "#E46651", "#00D8FF"],
-                        data: [1, 10, 5]
+                        data: [10,10,10]
                     }
                 ]
             },
 
-            grade: 80,
-
             positiveNews: ["https://www.naver.com/", "https://www.google.co.kr/", "https://www.acmicpc.net/", "https://programmers.co.kr/"],
             negativeNews: ["https://github.com/", "https://jasoseol.com/", "https://edu.ssafy.com/", "https://www.notion.so/"]
+            
         }
     },
     methods:{
+        async getSearchNewsInfo(searchWord){
+            const res = await news.getSearchNewsInfo(searchWord)
+            console.log("getSearchNewsInfo res >>>>> ", res.data)
+            return res.data;
+        },
         async getStockProfile(searchWord){
             const res = await stock.getStockProfile(searchWord)
             return res.data;
         },
         async searchStock(searchWord){
-            let data = await this.getStockProfile(searchWord)
-            this.searchWord = data.NAME
+            let data = await this.getSearchNewsInfo(searchWord)
+            this.totalNews = data.total_count
+            this.score = data.score_mean
+            this.vocab_size = data.vocab_size
+            this.positiveNews =  data.pos_link
+            this.positiveTitle = data.pos_title
+            this.negativeNews = data.neg_link
+            this.negativeTitle = data.neg_title
+            this.positive_ratio = data.positive_ratio
+            this.negaitive_ratio = data.negaitive_ratio
+            this.pos_count = data.pos_count
+            this.neg_count = data.neg_count
+            this.defaultWords = data.word_cloud
+            this.chartData.datasets[0].data[2] = data.negaitive_ratio
+            this.chartData.datasets[0].data[1] = data.positive_ratio
+            this.chartData.datasets[0].data[0] = Math.abs(data.negaitive_ratio - data.positive_ratio).toFixed(2)
         },
         // wordClickHandler(name, value, vm) {
         //     this.$emit(console.log('wordClickHandler', name, value, vm));
@@ -170,7 +193,8 @@ export default {
     mounted(){
         setInterval(() => {
             this.now = this.$moment(new Date()).format("DD MMM YYYY HH:mm:ss")
-        }, 1000)
+        }, 1000),
+        this.getSearchNewsInfo('주식')
     }
 }
 </script>
