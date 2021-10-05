@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 from collections import Counter
 from keras_preprocessing.sequence import pad_sequences
@@ -8,19 +10,23 @@ from konlpy.tag import Okt
 import datetime as dt
 import requests
 import pandas as pd
+import pathlib
+import os
+
 
 class News:
 
     global client_id
     global client_secret
+    global vocab_size
     client_id = "vKllKxKbERYB7fpkEQO4"
     client_secret = "K4jATtYNtv"
     global days_2ago
     days_2ago = (dt.datetime.today() - dt.timedelta(days=2)).strftime('%Y-%m-%d')
 
-    def __init__(self):
-        filename = "C:/Users/multicampus/Documents/S05P21A602/backend/root/app/service/news_model.h5"
-        score_model = load_model(filename)
+    # def __init__(self):
+    #     filename = os.getcwd() + "app/service/news_model.h5"
+    #     score_model = load_model(filename)
 
     def getNaverSearchNews(self, search_word, page_start, display):
         headers = {'X-Naver-Client-Id' : client_id,
@@ -47,17 +53,18 @@ class News:
 
     def DFconcat(self, df, df_add):
         df = pd.concat([df, df_add])
+        df.drop_duplicates(['title'], keep='first')
         return df
 
     def checkDate(self, df):
-        if df.iloc[-1, -1] < days_2ago:
+        if (df.iloc[-1, -1] < days_2ago) or (len(df) > 100):
             return False
         else: return True
 
     def morphs_nlp(self, df):
         # 불용어
-        stopwords = ['까지', '이후', '분기', '오다', '가다', '기업','지수','대한','최근','대비','지난','연구원','지난','투자','통해','주가','만원','거래','거래','따르다','조억원','억원','되다','다소','약간','하고','했고','매우','많이','가장','돼다','이고','였다','였고','이다','이라고','이라는','있다','있었다','의','가','이','은','을','들','는','좀','잘','걍','과','도','를','으로','자','에','에서','와','한','하다',
-                    '주식','가격','시장','증권','한국','미국','중국','금융','코스피','코스닥','애플','br', '/><', '/>', '.<', '<b>', '</b>']
+        stopwords = ['개월','월','어제','오늘','어떻다','년도','만에','오전', '오후','까지', '이후', '분기', '오다', '가다', '기업','지수','대한','최근','대비','지난','연구원','지난','투자','통해','주가','만원','거래','거래','따르다','조억원','억원','되다','다소','약간','하고','했고','매우','많이','가장','돼다','이고','였다','였고','이다','이라고','이라는','있다','있었다','의','가','이','은','을','들','는','좀','잘','걍','과','도','를','으로','자','에','에서','와','한','하다',
+                    '주식','가격','시장','증권','한국','금융','부터','br', '/><', '/>', '.<', '<b>', '</b>']
         morphs = []
         okt = Okt()
         data = df['description']
@@ -74,18 +81,22 @@ class News:
         return df
 
     def pos_neg(self, df):
-        positive_words = np.hstack(df[df.score >= 0.5]['tokenized'].values)
-        negative_words = np.hstack(df[df.score <= 0.5]['tokenized'].values)
-        total_words = np.hstack(df['tokenized'].values)
+        word_cloud = []
+        pos = len(df[df.score > 0.56])
+        neg = len(df[df.score < 0.53])
+        positive = df[df.score > 0.56][:10]
+        negative = df[df.score < 0.53][:10]
 
-        positive_count = Counter(positive_words)
-        negative_count = Counter(negative_words)
-        word_count = Counter(total_words)
+        pos_link = list(np.array(positive['link'].tolist()))
+        pos_title = [sentence.replace('<b>','').replace('</b>','') for sentence in list(np.array(positive['title'].tolist()))]
+        neg_link = list(np.array(negative['link'].tolist()))
+        neg_title = [sentence.replace('<b>','').replace('</b>','').replace('&quot','') for sentence in list(np.array(negative['title'].tolist()))]
 
-        pos30 = positive_count.most_common(30)
-        neg30 = negative_count.most_common(30)
-        word_count30 = word_count.most_common(30)
-        return {'pos30': pos30, 'neg30': neg30, 'word_count30': word_count30}
+        word_count = Counter(np.hstack(df['tokenized'].values)).most_common(50)
+        for i in word_count:
+            word_cloud.append({"name": i[0], "value": i[1]})
+        return {'pos_count': pos, 'neg_count': neg, 'word_cloud': word_cloud,
+                'pos_link': pos_link, 'pos_title': pos_title, 'neg_link': neg_link, 'neg_title': neg_title}
 
     def predict_score(self, df):
         test_x = df['tokenized'].values
@@ -96,6 +107,7 @@ class News:
         total_cnt = len(tokenizer.word_index)
         vocab_size = total_cnt
 
+        # 단어 집합 수 맞추기
         while vocab_size > 2600:
             rare_cnt = 0 # 빈도수가 threshold보다 작은 단어의 개수를 카운트
             total_freq = 0 # 총 단어 빈도수 총 합
@@ -111,7 +123,7 @@ class News:
             threshold += 1
 
             vocab_size = total_cnt - rare_cnt + 2
-            print('단어 집합의 크기 :', vocab_size)
+        print('단어 집합의 크기 :', vocab_size)
 
         tokenizer = Tokenizer(vocab_size, oov_token = 'OOV')
         tokenizer.fit_on_texts(test_x)
@@ -121,21 +133,28 @@ class News:
         max_len = max(len(l) for l in test_x)
         test_x = pad_sequences(test_x, maxlen = max_len)
 
-        filename = "C:/Users/multicampus/Documents/S05P21A602/backend/root/app/service/news_model.h5"
+        filename = os.path.join(pathlib.Path(__file__).parent.absolute(), 'news_model.h5')
+        # filename = "C:/Users/multicampus/Documents/S05P21A602/backend/root/app/service/news_model.h5"
         score_model = load_model(filename)
 
         score = score_model.predict(test_x)
         score = score.tolist()
         score = sum(score, [])
-
         df['score'] = score
-        score_mean = np.mean(score)
 
+        return {'df': df, 'vocab_size': vocab_size}
+
+    def today_score(self, df):
+        score_mean = round(np.mean(df['score']), 2)*100
         return score_mean
 
+    def date_score(self, df):
+        date_mean = df[['pubDate', 'score']].groupby('pubDate').mean().reset_index(drop=False)
+        return date_mean
+
     def ratio(self, df):
-        positive_ratio = len(df[df['score'] >= 0.51])/len(df)*100
-        negaitive_ratio = len(df[df['score'] < 0.51])/len(df)*100
+        positive_ratio = round(len(df[df['score'] > 0.56])/len(df)*100, 2)
+        negaitive_ratio = round(len(df[df['score'] < 0.53])/len(df)*100, 2)
 
         print('긍정 기사 비율 : ', positive_ratio, "% ")
         print('부정 기사 비율 : ', negaitive_ratio, "% ")
