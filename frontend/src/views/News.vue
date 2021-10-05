@@ -35,9 +35,7 @@
                 </div>
                 <div class="chart_score_positon col-md-4">
                     <div class="pie_chart_box">
-                        <div class="pie_chart">
-                            <Pie :data="chartData" :options="chartOptions"></Pie>
-                        </div>
+                        <Pie :height="240" :data="chartData" :options="chartOptions"></Pie>
                     </div>
                     <div class="score_box">
                         <div class="score">Score</div>
@@ -232,9 +230,6 @@ export default {
     position: relative;
     height: 60%;
     border: 1px solid;
-}
-
-.pie_chart{
     margin: 0;
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
