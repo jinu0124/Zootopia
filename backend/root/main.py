@@ -5,7 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.config.database import conf
 from app.database.conn import db
-from app.routers import stock
+from app.routers import stock, naver
 
 
 def init_app():
@@ -27,14 +27,15 @@ def init_app():
         max_age=3600,
     )
 
-    from app.scheduler import finance_news_scheduler as fns
-    @app.on_event("startup")
-    async def run_scheduler():
-        fns_sch = fns.Scheduler()
+    # from app.scheduler import finance_news_scheduler as fns
+    # @app.on_event("startup")
+    # async def run_scheduler():
+    #     fns_sch = fns.Scheduler()
 
 
     # 라우터
     app.include_router(stock.router, prefix='/stock', tags=['stocks'])
+    app.include_router(naver.router, prefix='/naver', tags=['navers'])
 
     return app
 

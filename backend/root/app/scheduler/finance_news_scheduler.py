@@ -25,5 +25,9 @@ class Scheduler:
         # print(celltrion_df)
         # print(naver_df)
 
+        # score 구하기
+
+        # 데이터베이스에 넣기
+
 
 
