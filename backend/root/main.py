@@ -5,7 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.config.database import conf
 from app.database.conn import db
-from app.routers import stock, naver
+from app.routers import stock, news naver
 
 
 def init_app():
@@ -35,6 +35,7 @@ def init_app():
 
     # 라우터
     app.include_router(stock.router, prefix='/stock', tags=['stocks'])
+    app.include_router(news.router, prefix='/news', tags=['news'])
     app.include_router(naver.router, prefix='/naver', tags=['navers'])
 
     return app
@@ -45,5 +46,5 @@ app = init_app()
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
 
-# gunicorn -k uvicorn.workers.UvicornWorker main:app --bind 0.0.0.0:8081 --workers 4 --daemon
-# docker run -itd -p 8081:8081 jinwoo6612/stocktest
+# gunicorn main:app -k uvicorn.workers.UvicornWorker -p 8080:8080 -w 4
+# docker run -itd -p 8080:8080 jinwoo6612/stocktest
