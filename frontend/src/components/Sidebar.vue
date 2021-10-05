@@ -94,7 +94,7 @@ border-right:1px solid #e5e5e5;
 position:absolute;
 top:0;
 bottom:0;
-height:150%;
+height:270%;
 flex-grow: 1;
 left:0;
 width:60px;
