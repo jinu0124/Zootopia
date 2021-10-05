@@ -14,23 +14,23 @@
             </div>
         </div>
         <br>
-        <div class="row-featurette">
-            <div class="col-img">
+        <div class="row featurette">
+            <div class="col-img col-md-4">
                 <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
-                <div class="col">
+            </div>
+            <div class="col col-md-8">
                 <h2 class="featurette-heading">1. 뉴스기사 분석 서비스 <span class="text-muted">  + Word Cloud</span></h2>
                 <p class="lead">Some great placeholder content for the first featurette here. Imagine some exciting prose here.</p>
-                </div>  
-            </div>
+            </div>  
         </div>
         <hr class = "hrstyle">
 
-        <div class="row-featurette">
-            <div class="col">
+        <div class="row featurette">
+            <div class="col-md-8">
                 <h2 class="featurette-heading">2. 주식 종목 예측 <span class="text-muted">  + Dart Info</span></h2>
                 <p class="lead">Another featurette? Of course. More placeholder content here to give you an idea of how this layout would work with some actual real-world content in place.</p>
             </div>
-            <div class="col-md-5 order-md-1">
+            <div class="col-md-4">
                 <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
 
             </div>
@@ -71,6 +71,7 @@ export default {
   width: 100%;
 }
 .lb-text {
+  width: 100%;
   padding: 10px 20px;
   border-radius: 10px;
   text-align: center;
@@ -80,7 +81,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.row-featurette{
+.featurette{
   position: relative;
   left: 5%;
 }
