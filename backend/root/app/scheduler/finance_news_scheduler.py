@@ -9,7 +9,7 @@ class Scheduler:
         self.job_id = 'finance news'
 
         # 23:50(KST) -> 14:50 (UTC)
-        self.sch.add_job(self.getFinance, 'cron', hour=14, minute=50, second==10, max_instances=1)
+        self.sch.add_job(self.getFinance, 'cron', hour=14, minute=50, second=10, max_instances=1)
 
         # 17:10(KST) -> 8:03 (UTC)
         # self.sch.add_job(self.getFinance, 'cron', hour=22, minute=19, second=10, max_instances=1)
