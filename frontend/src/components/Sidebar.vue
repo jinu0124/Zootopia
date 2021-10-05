@@ -4,10 +4,10 @@
         <nav class="main-menu">
          <ul>
              <li>
-                <div @click=moveToNews() class="mouse-on">
+                <div @click=moveToHome() class="mouse-on">
                     <i class="fa fa-home fa-3x"></i>
                     <span class="nav-text">
-                        간다 간다 뿅간다
+                        주투피아
                     </span>
                 </div>
             </li>
@@ -43,6 +43,9 @@ export default {
         }
     },
     methods:{
+        moveToHome(){
+            this.$router.push({name: "Home"}).catch(() => {})
+        },
         moveToNews(){
             this.$router.push({name: "News"}).catch(() => {})
         },
@@ -143,7 +146,7 @@ display:table-cell;
 vertical-align:middle;
 width:190px;
 font-family: 'Titillium Web', sans-serif;
-color: #636060
+color: #f1ebeb
 }
 
 .main-menu>ul.logout {
