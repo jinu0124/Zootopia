@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Stock from "../views/Stock";
 import News from "../views/News";
 import VueMoment from "vue-moment";
+import Home from "../views/Home"
 
 Vue.use(VueMoment);
 Vue.use(VueRouter);
@@ -10,7 +11,12 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    alias: ["/news"],
+    alias: ["/home"],
+    name: "Home",
+    component: Home,
+  },
+  {
+    path: "/news",
     name: "News",
     component: News,
   },
