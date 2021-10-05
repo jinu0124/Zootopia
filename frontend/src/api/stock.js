@@ -1,5 +1,5 @@
+/* eslint-disable */
 import _axios from "./default"
-
 export default {
     getStockProfile(stockName) {
         return _axios({

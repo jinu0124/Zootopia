@@ -6,9 +6,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.config.database import conf
 from app.database.conn import db
-from app.routers import stock
-from app.routers import news
-
+from app.routers import stock, news, naver
 
 def init_app():
     app = FastAPI()
@@ -29,9 +27,16 @@ def init_app():
         max_age=3600,
     )
 
+    from app.scheduler import finance_news_scheduler as fns
+    @app.on_event("startup")
+    async def run_scheduler():
+        fns_sch = fns.Scheduler()
+
+
     # 라우터
     app.include_router(stock.router, prefix='/stock', tags=['stocks'])
     app.include_router(news.router, prefix='/news', tags=['news'])
+    app.include_router(naver.router, prefix='/naver', tags=['navers'])
 
     return app
 
