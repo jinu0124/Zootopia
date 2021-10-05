@@ -141,11 +141,11 @@ export default {
             chartData: {
                 hoverBackgroundColor: "red",
                 hoverBorderWidth: 10,
-                labels: ["Green", "Red", "Blue"],
+                labels: ["중립", "긍정", "부정"],
                 datasets: [
                     {
                         label: "Data One",
-                        backgroundColor: ["#41B883", "#E46651", "#00D8FF"],
+                        backgroundColor: ["#41B883", "#00D8FF", "#E46651"],
                         data: [10,10,10]
                     }
                 ]
@@ -169,7 +169,8 @@ export default {
         async searchStock(searchWord){
             let data = await this.getSearchNewsInfo(searchWord)
             this.totalNews = data.total_count
-            this.score = data.score_mean.toFixed(2)
+            // this.score = data.score_mean.toFixed(2)
+            this.score =  (this.totalNews - 0.5*( data.pos_count+ data.neg_count)-data.neg_count / this.totalNews * 100).toFixed(2)
             this.vocab_size = data.vocab_size
             this.positiveNews =  data.pos_link
             this.positiveTitle = data.pos_title

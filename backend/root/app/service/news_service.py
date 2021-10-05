@@ -63,7 +63,7 @@ class News:
     def morphs_nlp(self, df):
         # 불용어
         stopwords = ['오늘','어떻다','년도','만에','오전', '오후','까지', '이후', '분기', '오다', '가다', '기업','지수','대한','최근','대비','지난','연구원','지난','투자','통해','주가','만원','거래','거래','따르다','조억원','억원','되다','다소','약간','하고','했고','매우','많이','가장','돼다','이고','였다','였고','이다','이라고','이라는','있다','있었다','의','가','이','은','을','들','는','좀','잘','걍','과','도','를','으로','자','에','에서','와','한','하다',
-                    '주식','가격','시장','증권','한국','미국','중국','금융','코스피','코스닥','애플','부터','br', '/><', '/>', '.<', '<b>', '</b>']
+                    '주식','가격','시장','증권','한국','금융','부터','br', '/><', '/>', '.<', '<b>', '</b>']
         morphs = []
         okt = Okt()
         data = df['description']
@@ -81,10 +81,10 @@ class News:
 
     def pos_neg(self, df):
         word_cloud = []
-        pos = len(df[df.score > 0.54])
-        neg = len(df[df.score < 0.51])
-        positive = df[df.score > 0.54][:10]
-        negative = df[df.score < 0.51][:10]
+        pos = len(df[df.score > 0.56])
+        neg = len(df[df.score < 0.53])
+        positive = df[df.score > 0.56][:10]
+        negative = df[df.score < 0.53][:10]
 
         pos_link = list(np.array(positive['link'].tolist()))
         pos_title = [sentence.replace('<b>','').replace('</b>','') for sentence in list(np.array(positive['title'].tolist()))]
@@ -152,8 +152,8 @@ class News:
         return date_mean
 
     def ratio(self, df):
-        positive_ratio = round(len(df[df['score'] > 0.53])/len(df)*100, 2)
-        negaitive_ratio = round(len(df[df['score'] < 0.51])/len(df)*100, 2)
+        positive_ratio = round(len(df[df['score'] > 0.56])/len(df)*100, 2)
+        negaitive_ratio = round(len(df[df['score'] < 0.53])/len(df)*100, 2)
 
         print('긍정 기사 비율 : ', positive_ratio, "% ")
         print('부정 기사 비율 : ', negaitive_ratio, "% ")
