@@ -57,7 +57,7 @@ class News:
 
     def morphs_nlp(self, df):
         # 불용어
-        stopwords = ['년도','만에','오전', '오후','까지', '이후', '분기', '오다', '가다', '기업','지수','대한','최근','대비','지난','연구원','지난','투자','통해','주가','만원','거래','거래','따르다','조억원','억원','되다','다소','약간','하고','했고','매우','많이','가장','돼다','이고','였다','였고','이다','이라고','이라는','있다','있었다','의','가','이','은','을','들','는','좀','잘','걍','과','도','를','으로','자','에','에서','와','한','하다',
+        stopwords = ['오늘','어떻다','년도','만에','오전', '오후','까지', '이후', '분기', '오다', '가다', '기업','지수','대한','최근','대비','지난','연구원','지난','투자','통해','주가','만원','거래','거래','따르다','조억원','억원','되다','다소','약간','하고','했고','매우','많이','가장','돼다','이고','였다','였고','이다','이라고','이라는','있다','있었다','의','가','이','은','을','들','는','좀','잘','걍','과','도','를','으로','자','에','에서','와','한','하다',
                     '주식','가격','시장','증권','한국','미국','중국','금융','코스피','코스닥','애플','부터','br', '/><', '/>', '.<', '<b>', '</b>']
         morphs = []
         okt = Okt()
@@ -120,6 +120,7 @@ class News:
         # 크롤링 페이지의 기사 길이 확인하고 수정하기!!!!!!!!!!!!!!!!!!!!!!!111
         max_len = max(len(l) for l in test_x)
         test_x = pad_sequences(test_x, maxlen = max_len)
+        ## ---
 
         filename = "C:/Users/multicampus/Documents/S05P21A602/backend/root/app/service/news_model.h5"
         score_model = load_model(filename)
@@ -129,9 +130,16 @@ class News:
         score = sum(score, [])
 
         df['score'] = score
-        score_mean = np.mean(score)
 
+        return df
+
+    def today_score(self, df):
+        score_mean = np.mean(df['score'])
         return score_mean
+
+    def date_score(self, df):
+        date_mean = df[['pubDate','score']].groupby('pubDate').mean().reset_index(drop=False)
+        return date_mean
 
     def ratio(self, df):
         positive_ratio = len(df[df['score'] >= 0.51])/len(df)*100

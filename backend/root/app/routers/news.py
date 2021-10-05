@@ -33,7 +33,8 @@ async def news_predict(search_word: str):
     df = news_service.morphs_nlp(df)
     print('### df[0]: ', df.iloc[0])
     # 평균점수
-    score_mean = news_service.predict_score(df)
+    df = news_service.predict_score(df)
+    score_mean = news_service.today_score(df)
     print('### score_mean: ', score_mean)
 
     # 긍부정 비율
