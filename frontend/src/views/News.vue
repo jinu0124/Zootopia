@@ -1,17 +1,11 @@
 <template>
-    <div class="page">
+    <div>
         <div class="row">
             <Sidebar></Sidebar>
         </div>
         <div class="row">
             <SearchBar v-on:searchStock="searchStock"></SearchBar>
         </div>    
-        <div class="row">
-            <div class="stock_remark_title col-md-8">
-                <label>탐색 시작일<input type="date" /></label>
-                <label>탐색 종료일<input type="date" /></label>
-            </div>
-        </div>
         <div class="row count">
             <div class="count_box">
                 <p>검색된 기사 개수</p>
@@ -39,11 +33,11 @@
                 <div class="word_cloud_position col-md-8">
                     <word-cloud :data="defaultWords" :myColors="myColors"></word-cloud>
                 </div>
-                <div class="chart_score_positon">
+                <div class="chart_score_positon col-md-4">
                     <div class="pie_chart_box">
-                            <div class="pie_chart">
-                                <Pie :data="chartData" :options="chartOptions"></Pie>
-                            </div>
+                        <div class="pie_chart">
+                            <Pie :data="chartData" :options="chartOptions"></Pie>
+                        </div>
                     </div>
                     <div class="score_box">
                         <div class="score">Score</div>
@@ -54,10 +48,10 @@
         </div>
         <div class="row PnN_news">
             <div class="row news">
-                <div class="news_list">
+                <div class="news_list col-md-6">
                     <PositiveNews :positiveNews="positiveNews"></PositiveNews>
                 </div>
-                <div class="news_list">
+                <div class="news_list col-md-6">
                     <NegativeNews :negativeNews="negativeNews"></NegativeNews>
                 </div>
             </div>
@@ -92,15 +86,15 @@ export default {
 
             myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef'],
             defaultWords: [{
-                "name": "Cat",
+                "name": "고양이",
                 "value": 26
                 },
                 {
-                "name": "fish",
+                "name": "생선",
                 "value": 19
                 },
                 {
-                "name": "things",
+                "name": "물건",
                 "value": 18
                 },
                 {
@@ -182,27 +176,6 @@ export default {
 </script>
 
 <style>
-.page{
-    background-color: rgb(245, 250, 248);
-}
-
-.stock_remark_title{
-    position:relative;
-    top:120px;
-    padding-left:120px;
-    font-size:1.4em;
-}
-
-label {
-    /* display: inline-block; */
-    font: 1rem 'Fira Sans', sans-serif;
-    margin-right:10px;
-}
-
-input {
-    margin-left: 10px;
-}
-
 .count{
     width: 90%;
     position: relative;
@@ -216,16 +189,14 @@ input {
     border: 1px solid;
     text-align: center;
     margin: 0 5px;
-    /* background-color: rgb(245, 250, 248); */
-    background-color: white;
+    background-color: rgb(245, 250, 248);
     /* border-radius: 0 15% 15% 0; */
     border: white 1px solid;
 }
 
 .middle{
     margin-top: 180px;
-    /* background-color: rgb(245, 250, 248); */
-    background-color: white;
+    background-color: rgb(245, 250, 248);
     border-radius: 0 15% 15% 0;
     border: white 1px solid;
     padding-top: 20px;
@@ -247,18 +218,14 @@ input {
 }
 
 .word_cloud_chart{
+    width: 90%;
     position:relative;
     /* top:180px; */
     left:120px;   
 }
 
 .word_cloud_position{
-    width: 60%;
     border: 1px solid;
-}
-
-.chart_score_positon{
-    width: 30%;
 }
 
 .pie_chart_box{
@@ -302,8 +269,7 @@ input {
 
 .PnN_news{
     margin-top: 40px;
-    /* background-color: rgb(245, 250, 248); */
-    /* background-color: white; */
+    background-color: rgb(245, 250, 248);
     border-radius: 0 15% 15% 0;
     /* border: white 1px solid; */
     padding-top: 20px;
