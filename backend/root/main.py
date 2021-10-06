@@ -1,5 +1,5 @@
 import uvicorn
-import gunicorn
+# import gunicorn
 from dataclasses import asdict
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
