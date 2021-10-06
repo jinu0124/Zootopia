@@ -15,7 +15,7 @@
                 <div @click=moveToNews() class="mouse-on">
                     <i class="fa fa-home fa-2x"></i>
                     <span class="nav-text">
-                        Word Analysis
+                        News Analysis
                     </span>
                 </div>
                 
@@ -24,7 +24,7 @@
                 <div @click=moveToStock() class="mouse-on">
                     <i class="fa fa-laptop fa-2x"></i>
                     <span class="nav-text">
-                        Graph Analysis
+                        Stock Analysis
                     </span>
                 </div>
                 
