@@ -31,7 +31,7 @@
 
         <div class="row featurette">
             <div class="col-img col-md-4">
-                <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee"/><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
+                <img src="../news_view.jpg" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500"/>
             </div>
             <div class="col col-md-8">
                 <h2 class="featurette-heading">1. 뉴스기사 분석 서비스 <span class="text-muted">  + Word Cloud</span></h2>

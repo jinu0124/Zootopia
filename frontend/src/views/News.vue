@@ -39,8 +39,8 @@
         </div>
         <div v-if="isLoading" class="row middle">
             <div class="row">
-                <div class="word_cloud col-md-8">Word Cloud</div>
-                <div class="word_cloud_remark col-md-7">of {{now}} AM</div>
+                <div class="word_cloud col-md-7" style="">Word Cloud</div>
+                <div class="word_cloud_remark col-md-8">of {{now}} AM</div>
             </div>
             <div class="row word_cloud_chart">
                 <div class="word_cloud_position col-md-8">
@@ -61,10 +61,10 @@
         </div>
         <div v-if="isLoading" class="row PnN_news">
             <div class="row news">
-                <div class="news_list col-md-6">
+                <div class="news_list col-md-1">
                     <PositiveNews :positiveNews="positiveTitle" :link="positiveNews"></PositiveNews>
                 </div>
-                <div class="news_list col-md-6">
+                <div class="news_list col-md-7">
                     <NegativeNews :negativeNews="negativeTitle" :link="negativeNews"></NegativeNews>
                 </div>
             </div>
@@ -190,8 +190,9 @@ export default {
             let data = await this.getSearchNewsInfo(searchWord)
             this.totalNews = data.total_count
             // this.score = data.score_mean.toFixed(2)
-            this.score =  (this.totalNews - 0.5*( data.pos_count+ data.neg_count)-data.neg_count / this.totalNews * 100).toFixed(2)
-            this.vocab_size = data.vocab_size
+            this.totalNews - 0.5*( data.pos_count+ data.neg_count)-data.neg_count / this.totalNews * 100
+            this.score =  ((( 3 * this.pos_count + (this.totalNews - ( data.pos_count+ data.neg_count)) -  this.neg_count ) / (3 * this.totalNews)) * 100 ).toFixed(2)
+            this.vocab_size = data.vocab_size 
             this.positiveNews =  data.pos_link
             this.positiveTitle = data.pos_title
             this.negativeNews = data.neg_link
@@ -289,15 +290,16 @@ p.searchWord{
 .word_cloud{
     position:relative;
     /* top:180px; */
-    padding-left:120px;
-    font-size:1.4em;
+    padding-left:50px;
+    font-size:40px;
+    font-weight:bold;
 }
 
 .word_cloud_remark{
     position:relative;
     /* top:180px; */
-    padding-left:120px;
-    font-size:0.5em;
+    padding-left:50px;
+    font-size:20px;
 }
 
 .word_cloud_chart{
@@ -366,15 +368,13 @@ p.searchWord{
     width: 90%;
     position:relative;
     /* top:210px; */
-    left:120px;
+    left:100px;
 }
 
 .news_list{
     display: inline-block;
     width : 49%;
     height: 400px;
-    border: 1px solid;
-    margin: 0 5px;
     background-color: white;
 }
 

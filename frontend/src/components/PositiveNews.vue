@@ -67,7 +67,7 @@ export default {
     
     float:center;
     padding-bottom: 15px;
-    border-bottom:rgb(107, 156, 179) 1px solid;
+    border-bottom:rgba(18, 87, 61, 0.144) 1px solid;
 }
 .stock_info>ul>li:not(:first-child){
     padding-top: 10px;
@@ -87,12 +87,12 @@ ul{
    list-style:none;
 }
 
-.news_odd{
+/* .news_odd{
     background-color: MediumSeaGreen;
 }
 
 .news_even{
     background-color:chartreuse
-}
+} */
 
 </style>
