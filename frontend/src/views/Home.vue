@@ -52,7 +52,7 @@
         </div>
         <hr class = "hrstyle">
         <footer>
-            <p style="float:right; margin-right:20px" ><a href="#">Back to top</a></p>
+            <p style="float:right; margin-right:20px" ><a href="#">Back to top ▲</a></p>
             <p style="margin-left:5%" >&copy; 2021.09 – 2021.10 주투피아</p>
         </footer>
     </div>
