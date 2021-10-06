@@ -2,29 +2,35 @@ import json
 import ast
 import socket
 
+host = "3.37.16.32"
+port = 4500
+
+
 class Kiwoom():
     def __init__(self):
         super().__init__()
 
-    def getTenTimeHoga(self, client_socket):
-        print("Server : 호가 정보 받기 전 대기")
-        try:
-            #client_socket.settimeout(3)                   # timeout 설정
-            ask = client_socket.recv(1024)
-            if len(ask) <= 2:
-                return [], []
-            ask = ast.literal_eval(ask.decode('utf-8'))
-            ask_decode = ask[0]
-            bid = client_socket.recv(1024)
-            bid_decode = ast.literal_eval(bid.decode('utf-8'))[0]
+    def register_hoga(self, symbol):
+        msg = dict()
+        msg['symbol'] = str(symbol)
+        msg['method'] = "register"
+        byte_msg = json.dumps(msg, indent=2).encode('utf-8')
 
-            print("Server : 호가 정보 받음", ask_decode, bid_decode)
-            return ask_decode, bid_decode
-        except socket.timeout:
-            return [], []
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.connect((host, port))  # , port
+        print("Server socket connected", host, port)
+        server_socket.sendall(byte_msg)
 
-    def getLastPrice(self, symbol):
-        pass
+    def remove_hoga(self, symbol):
+        msg = dict()
+        msg['symbol'] = str(symbol)
+        msg['method'] = "remove"
+        byte_msg = json.dumps(msg, indent=2).encode('utf-8')
+
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.connect((host, port))  # , port
+        print("Server socket connected", host, port)
+        server_socket.sendall(byte_msg)
 
 
 k_win = Kiwoom()

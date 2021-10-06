@@ -1,11 +1,17 @@
+import asyncio
+
 import requests
 import zipfile
 from io import BytesIO
+
+import typing
 import xmltodict
 import json
 from bs4 import BeautifulSoup
 import OpenDartReader
 import socket
+import threading
+import time
 
 from fastapi import APIRouter, Depends, WebSocket
 from sqlalchemy.orm import Session
@@ -21,8 +27,6 @@ from ..service.kiwoom_service import k_win
 
 router = APIRouter()
 
-host = "3.37.16.32"
-port = 4500
 
 url = 'https://opendart.fss.or.kr/api/corpCode.xml'
 api_key = '5f7647c213c1aa874a889ff66a791412bc1020b7'
@@ -39,9 +43,9 @@ async def get_stock_profile(name: str, db: Session = Depends(db.get_db)):
 
 
 @router.get("/predict")
-async def stock_predict(name: str):
-    if name is None: handler.code(404)
-    last_and_predict_stock, predict_stock = stock_service.predict(name)
+async def stock_predict(symbol: str):
+    if symbol is None: handler.code(404)
+    last_and_predict_stock, predict_stock = stock_service.predict(symbol)
     print("predict_stock: ", len(predict_stock))
     print(predict_stock)
 
@@ -49,7 +53,7 @@ async def stock_predict(name: str):
     ret = dict()
 
     for i, e in enumerate(predict_stock):
-        day.append('D+' + str(i+1))
+        day.append('D+' + str(i + 1))
 
     ret['close'] = predict_stock
     ret['date'] = day
@@ -72,7 +76,7 @@ async def get_today(symbol: str):
         handler.code(404)
 
     today = stock_service.get_today(symbol)
-    print("종목 금일 데이터: ", today)
+    print(today)
 
     return today
 
@@ -86,51 +90,29 @@ async def get_financial_info(name: str, db: Session = Depends(db.get_db)):
     return dart_service.financial_info(dart, stock_profile.symbol)
 
 
-# Client와 Socket 연결하기
-@router.websocket("/hoga/{symbol}")
-async def get_hoga(symbol: str, client_socket: WebSocket, db: Session = Depends(db.get_db)):
-    print("symbol : ", symbol)
-    await client_socket.accept()
-    print("Front Client Socket accepted")
-    if symbol is None:
-        handler.code(404)
 
-    # Kiwoom API와 소켓 통신 만들기
-    msg = dict()
-    msg['symbol'] = str(symbol)
-    msg['method'] = "get_hoga"
-    byte_msg = json.dumps(msg, indent=2).encode('utf-8')
+# DB에서 요청 symbol 종목 호가 데이터 반환받기
+@router.get("/realtime_hoga")
+async def get_realtime_hoga(symbol: str, db: Session = Depends(db.get_db)):
+    ret = stock_crud.get_hoga(db, symbol)
 
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    print("Server socket connection waiting:", host, port)
-    server_socket.connect((host, port))               #, port
-    print("Server socket connected")
-    server_socket.sendall(byte_msg)
-    print("socket Init")
-    cnt = 0
-    while True:
-        if cnt > 10:
-            break
-        cnt += 1
-        print("Server: 프로그램에 소켓 통신 요청", cnt, "번째")
-        ask, bid = k_win.getTenTimeHoga(server_socket)
-
-        if len(ask) == 0:
-            print("Server: 호가 정보 없음.")
-            break
-
-        print("Server: 프론트로 호가 정보 전송 전")
-        try:
-            await client_socket.send_json(ask)
-            await client_socket.send_json(bid)
-            print("Server: 프론트로 호가 정보 전송 완료")
-        except:
-            break
+    return ret
 
 
-    print("서버 소켓 닫음")
-    await client_socket.close()
-    server_socket.close()
+# Client가 요청한 종목 실시간 호가 소켓 생성, 종목 등록
+@router.post("/register_hoga")
+def register_hoga(symbol: str):
+    k_win.register_hoga(symbol)
+
+    return "success"
+
+
+# 실시간 호가 제거
+@router.delete("/remove_hoga")
+def remove_hoga(symbol: str):
+    k_win.remove_hoga(symbol)
+
+    return "success"
 
 
 # 서비스에 사용하지 않음
@@ -167,4 +149,3 @@ def insert_financial_info(db: Session = Depends(db.get_db)):
         db.commit()
 
     print("the end")
-
