@@ -84,10 +84,10 @@ class News:
 
     def pos_neg(self, df):
         word_cloud = []
-        pos = len(df[df.score > 0.56])
-        neg = len(df[df.score < 0.51])
-        positive = df[df.score > 0.56][:10]
-        negative = df[df.score < 0.51][:10]
+        pos = len(df[df.score > 0.57])
+        neg = len(df[df.score < 0.52])
+        positive = df[df.score > 0.57][:10]
+        negative = df[df.score < 0.52][:10]
 
         pos_link = list(np.array(positive['link'].tolist()))
         pos_title = [sentence.replace('<b>','').replace('</b>','').replace('&quot','').replace('&amp','').replace(';','') for sentence in list(np.array(positive['title'].tolist()))]
@@ -155,8 +155,8 @@ class News:
         return date_mean
 
     def ratio(self, df):
-        positive_ratio = round(len(df[df['score'] > 0.56])/len(df)*100, 2)
-        negaitive_ratio = round(len(df[df['score'] < 0.51])/len(df)*100, 2)
+        positive_ratio = round(len(df[df['score'] > 0.57])/len(df)*100, 2)
+        negaitive_ratio = round(len(df[df['score'] < 0.52])/len(df)*100, 2)
 
         print('긍정 기사 비율 : ', positive_ratio, "% ")
         print('부정 기사 비율 : ', negaitive_ratio, "% ")

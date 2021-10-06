@@ -91,10 +91,10 @@ transition: all 0.4s ease;
 .main-menu {
 background:#212121;
 border-right:1px solid #e5e5e5;
-position:absolute;
+position:fixed;
 top:0;
 bottom:0;
-height:270%;
+height:100%;
 flex-grow: 1;
 left:0;
 width:60px;
