@@ -309,9 +309,6 @@ p.searchWord{
     left:1%;   
 }
 
-.word_cloud_position{
-}
-
 .pie_chart_box{
     position: relative;
     height: 60%;
@@ -365,16 +362,17 @@ p.searchWord{
 }
 
 .news{
-    width: 90%;
+    width: 100%;
     position:relative;
     /* top:210px; */
-    left:100px;
+    left:20px;
 }
 
 .news_list{
     display: inline-block;
     width : 49%;
     height: 400px;
+    margin: 0 5px;
     background-color: white;
 }
 
