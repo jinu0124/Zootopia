@@ -36,7 +36,7 @@
             <div class="col-img col-md-3">
                 <div class="hover_effect_box hover_effect_5">
                     <div class="content_bg">
-                        <img src="../news_view.jpg" class="img2" width="500" height="500"/>
+                        <img src="../news_view.png" class="img2" width="500" height="500"/>
                     </div>
                     <div class="caption">
                         <div class="caption_desc">
@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col col-md-8" style="margin-top: 100px; margin-left: 50px">
+            <div class="col col-md-8" style="margin-top: 100px; margin-left: 80px">
                 <h2 class="featurette-heading"><a style="font-size: 95px">1 </a> <a style="font-size: 50px">뉴스기사 분석 서비스</a> <span class="text-muted"> +Word Cloud</span></h2>
                 <br>
                 <p class="lead" style="font-size: 26px; margin-left: 30px"><a style="font-weight: bolder; font-size: 31px;"> What is the most important to investment? &nbsp; &nbsp;</a>
