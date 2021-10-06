@@ -16,12 +16,12 @@ async def news_predict(search_word: str):
     print("df : ", df)
 
     page_count = 1
-    new_news = news_service.getNaverSearchNews(search_word, page_count, 30)
+    new_news = news_service.getNaverSearchNews(search_word, page_count, 100)
     df = news_service.DFconcat(df, new_news)
 
     while news_service.checkDate(df):
         page_count += 1
-        new_news = news_service.getNaverSearchNews(search_word, page_count, 30)
+        new_news = news_service.getNaverSearchNews(search_word, page_count, 100)
         df = news_service.DFconcat(df, new_news)
 
     days_2ago = (dt.datetime.today() - dt.timedelta(days=2)).strftime('%Y-%m-%d')

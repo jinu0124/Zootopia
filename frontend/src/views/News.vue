@@ -5,8 +5,17 @@
         </div>
         <div class="row">
             <SearchBar v-on:searchStock="searchStock"></SearchBar>
-        </div>    
-        <div class="row count">
+        </div>
+        <div v-if="isLoading ? false : true" class="lb-wrap2">
+            <div class="lb-image2" >
+                <img style="width: 30%" src="../Spinner.gif">
+            </div>
+            <div class="lb-text2">
+                <br>
+                <h2 style="font-size: 30px;">분석 중 입니다. 잠시만 기다려주세요!</h2>
+            </div>
+        </div>
+        <div v-if="isLoading" class="row count">
             <div class="count_box">
                 <p>검색된 기사 개수</p>
                 <p>{{ totalNews }}</p>
@@ -24,7 +33,7 @@
                 <p>{{ neg_count }}</p>
             </div>
         </div>
-        <div class="row middle">
+        <div v-if="isLoading" class="row middle">
             <div class="row">
                 <div class="word_cloud col-md-8">Word Cloud</div>
                 <div class="word_cloud_remark col-md-7">of {{now}} AM</div>
@@ -46,7 +55,7 @@
                 </div>
             </div>
         </div>
-        <div class="row PnN_news">
+        <div v-if="isLoading" class="row PnN_news">
             <div class="row news">
                 <div class="news_list col-md-6">
                     <PositiveNews :positiveNews="positiveTitle"></PositiveNews>
@@ -84,7 +93,7 @@ export default {
     },
     data(){
         return{
-
+            isLoading: false,
             searchWord: "주식",
 
             myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef'],
@@ -158,6 +167,7 @@ export default {
     },
     methods:{
         async getSearchNewsInfo(searchWord){
+            this.isLoading = false
             const res = await news.getSearchNewsInfo(searchWord)
             console.log("getSearchNewsInfo res >>>>> ", res.data)
             return res.data;
@@ -184,6 +194,8 @@ export default {
             this.chartData.datasets[0].data[2] = data.negaitive_ratio
             this.chartData.datasets[0].data[1] = data.positive_ratio
             this.chartData.datasets[0].data[0] = Math.abs(data.negaitive_ratio - data.positive_ratio).toFixed(2)
+
+            this.isLoading = true
         },
         // wordClickHandler(name, value, vm) {
         //     this.$emit(console.log('wordClickHandler', name, value, vm));
@@ -202,6 +214,24 @@ export default {
 </script>
 
 <style>
+.lb-wrap2 {
+  width: 100%;
+  position: relative;
+  text-align: center;
+}
+.lb-wrap2 img {
+  width: 100%;
+  margin-top: 10%;
+  text-align: center;
+}
+.lb-text2 {
+  width: 100%;
+  border-radius: 10px;
+  /* text-align: center; */
+  color:rgb(32, 64, 168);
+  position: absolute;
+  /* transform: translate(-50%, -50%); */
+}
 .count{
     width: 90%;
     position: relative;
@@ -228,7 +258,10 @@ export default {
     padding-top: 20px;
     padding-bottom: 20px;
 }
-
+.Loading{
+    margin-top: 180px;
+    text-align: center;
+}
 .word_cloud{
     position:relative;
     /* top:180px; */

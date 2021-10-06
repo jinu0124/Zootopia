@@ -39,21 +39,23 @@ class News:
         start = page_start
         url = f"https://openapi.naver.com/v1/search/news.{encode_type}?query={search_word}&display={str(int(max_display))}&start={str(int(start))}&sort={sort}"
 
-        #HTTP요청 보내기
-        r = requests.get(url, headers=headers)
-        #요청 결과 보기 200 이면 정상적으로 요청 완료
+        try:
+            #HTTP요청 보내기
+            r = requests.get(url, headers=headers)
+            #요청 결과 보기 200 이면 정상적으로 요청 완료
+            if (r == None):
+                return None
 
-        new_df = pd.DataFrame(r.json()['items'])
-        new_df= new_df[new_df['title'].str.contains(search_word)]
-        new_df['pubDate'] = [ dt.datetime.strptime(x[5:16], "%d %b %Y").strftime('%Y-%m-%d') for x in new_df['pubDate'] ]
-        if (r == None):
+            new_df = pd.DataFrame(r.json()['items'])
+            new_df= new_df[new_df['title'].str.contains(search_word)]
+            new_df['pubDate'] = [ dt.datetime.strptime(x[5:16], "%d %b %Y").strftime('%Y-%m-%d') for x in new_df['pubDate'] ]
+        except:
             return None
-        else:
-            return new_df
+        return new_df
 
     def DFconcat(self, df, df_add):
         df = pd.concat([df, df_add])
-        df.drop_duplicates(['title'], keep='first')
+        df = df.drop_duplicates(['title'], keep='first').reset_index(drop=True)
         return df
 
     def checkDate(self, df):
@@ -90,7 +92,7 @@ class News:
         pos_link = list(np.array(positive['link'].tolist()))
         pos_title = [sentence.replace('<b>','').replace('</b>','') for sentence in list(np.array(positive['title'].tolist()))]
         neg_link = list(np.array(negative['link'].tolist()))
-        neg_title = [sentence.replace('<b>','').replace('</b>','').replace('&quot','') for sentence in list(np.array(negative['title'].tolist()))]
+        neg_title = [sentence.replace('<b>','').replace('</b>','').replace('&quot;','') for sentence in list(np.array(negative['title'].tolist()))]
 
         word_count = Counter(np.hstack(df['tokenized'].values)).most_common(50)
         for i in word_count:
