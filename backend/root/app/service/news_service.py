@@ -94,7 +94,7 @@ class News:
         neg_link = list(np.array(negative['link'].tolist()))
         neg_title = [sentence.replace('<b>','').replace('</b>','').replace('&quot','').replace('&amp','').replace(';','') for sentence in list(np.array(negative['title'].tolist()))]
 
-        word_count = Counter(np.hstack(df['tokenized'].values)).most_common(50)
+        word_count = Counter(np.hstack(df['tokenized'].values)).most_common(80)
         for i in word_count:
             word_cloud.append({"name": i[0], "value": i[1]})
         return {'pos_count': pos, 'neg_count': neg, 'word_cloud': word_cloud,
