@@ -30,11 +30,11 @@
             </div>
             <div class="count_box">
                 <p>긍정 기사 개수</p>
-                <p class="number">{{ pos_count }}</p>
+                <p class="number" style="color: blue">{{ pos_count }}</p>
             </div>
             <div class="count_box">
                 <p>부정 기사 개수</p>
-                <p class="number">{{ neg_count }}</p>
+                <p class="number" style="color: red">{{ neg_count }}</p>
             </div>
         </div>
         <div v-if="isLoading" class="row middle">
@@ -47,15 +47,15 @@
                     <word-cloud style="transform: scale(1.3); width:110%; margin-left:-5%; margin-top: 5%;" :data="defaultWords" :myColors="myColors"></word-cloud>
                 </div>
                 <div class="chart_score_positon col-md-4">
-                    <div class="pie_chart_box">
+                    <!-- <div class="pie_chart_box"> -->
                         <div class="pie_chart">
                             <Pie :data="chartData" :options="chartOptions"></Pie>
+                            <div class="score_box">
+                                <div class="score">Score</div>
+                                <div class="grade">{{ score }}점</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="score_box">
-                        <div class="score">Score</div>
-                        <div class="grade">{{ score }}점</div>
-                    </div>
+                    <!-- </div> -->
                 </div>
             </div>
         </div>
@@ -228,6 +228,7 @@ export default {
 p.number {
     font-size: 30px; 
     font-weight:bold;
+    margin: 0;
 }
 p.searchWord{
     padding-top: 100px;
@@ -268,6 +269,7 @@ p.searchWord{
     text-align: center;
     border-radius: 10px;
     margin: 0 5px;
+    padding: 10px;
     background-color: white;
     /* border-radius: 0 15% 15% 0; */
     border: rgb(58, 187, 127) 1px solid;
@@ -309,12 +311,13 @@ p.searchWord{
     left:1%;   
 }
 
-.pie_chart_box{
-    position: relative;
+/* .pie_chart_box{
     height: 60%;
-}
+} */
+
 
 .pie_chart{
+    position: relative;
     margin: 0;
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -324,12 +327,12 @@ p.searchWord{
 }
 
 .score_box{
-    position: relative;
-    height: 40%;
+    position: absolute;
+    /* height: 40%; */
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    display: block;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .score{

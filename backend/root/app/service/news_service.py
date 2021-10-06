@@ -59,7 +59,7 @@ class News:
         return df
 
     def checkDate(self, df):
-        if (df.iloc[-1, -1] < days_2ago) or (len(df) > 120):
+        if (df.iloc[-1, -1] < days_2ago) or (len(df) > 100):
             return False
         else: return True
 

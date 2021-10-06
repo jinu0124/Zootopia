@@ -11,8 +11,8 @@ export default {
       borderWidth: "10px",
       hoverBackgroundColor: "red",
       hoverBorderWidth: "10px",
-      responsive: true,
-      maintainAspectRatio: false,
+      // responsive: true,
+      // maintainAspectRatio: false,
     });
   }
 };
