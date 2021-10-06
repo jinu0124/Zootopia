@@ -85,14 +85,14 @@ class News:
     def pos_neg(self, df):
         word_cloud = []
         pos = len(df[df.score > 0.56])
-        neg = len(df[df.score < 0.53])
+        neg = len(df[df.score < 0.51])
         positive = df[df.score > 0.56][:10]
-        negative = df[df.score < 0.53][:10]
+        negative = df[df.score < 0.51][:10]
 
         pos_link = list(np.array(positive['link'].tolist()))
-        pos_title = [sentence.replace('<b>','').replace('</b>','') for sentence in list(np.array(positive['title'].tolist()))]
+        pos_title = [sentence.replace('<b>','').replace('</b>','').replace('&quot','').replace('&amp','').replace(';','') for sentence in list(np.array(positive['title'].tolist()))]
         neg_link = list(np.array(negative['link'].tolist()))
-        neg_title = [sentence.replace('<b>','').replace('</b>','').replace('&quot;','') for sentence in list(np.array(negative['title'].tolist()))]
+        neg_title = [sentence.replace('<b>','').replace('</b>','').replace('&quot','').replace('&amp','').replace(';','') for sentence in list(np.array(negative['title'].tolist()))]
 
         word_count = Counter(np.hstack(df['tokenized'].values)).most_common(50)
         for i in word_count:
@@ -156,7 +156,7 @@ class News:
 
     def ratio(self, df):
         positive_ratio = round(len(df[df['score'] > 0.56])/len(df)*100, 2)
-        negaitive_ratio = round(len(df[df['score'] < 0.53])/len(df)*100, 2)
+        negaitive_ratio = round(len(df[df['score'] < 0.51])/len(df)*100, 2)
 
         print('긍정 기사 비율 : ', positive_ratio, "% ")
         print('부정 기사 비율 : ', negaitive_ratio, "% ")
