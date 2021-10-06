@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="background-color:#07d4a43b; overflow: hidden;">
         <div class="row">
             <Sidebar></Sidebar>
         </div>
@@ -428,8 +428,5 @@ export default {
     padding-top: 40px;
 }
 
-body{
-    background: #07d4a43b;
-}
 
 </style>
