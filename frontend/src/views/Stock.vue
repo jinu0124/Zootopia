@@ -335,7 +335,7 @@ export default {
 .outer_box{
     margin-top: 130px;
     background-color: rgb(245, 250, 248);
-    border-radius: 0 15% 15% 0;
+    /* border-radius: 0 15% 15% 0; */
     border: white 1px solid;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -420,6 +420,10 @@ export default {
     position: relative;
     padding-left: 120px;
     padding-top: 40px;
+}
+
+body{
+    background: #07d4a43b;
 }
 
 </style>
