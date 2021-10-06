@@ -37,10 +37,6 @@ export default {
 </script>
 
 <style>
-ul{
-   list-style:none;
-}
-
 .info_title{
     color: rgb(158, 152, 152);
     font-size: 0.6em !important;

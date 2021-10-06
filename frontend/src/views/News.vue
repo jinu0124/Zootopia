@@ -1,36 +1,40 @@
 <template>
-    <div>
+    <div style="background-color:#07d4a43b; overflow: hidden;">
         <div class="row">
             <Sidebar></Sidebar>
         </div>
         <div class="row">
             <SearchBar v-on:searchStock="searchStock"></SearchBar>
         </div>
+        <div>
+            <br>
+            <p class="searchWord">검색명 '{{ searchWord }}'</p>
+        </div>
         <div v-if="isLoading ? false : true" class="lb-wrap2">
             <div class="lb-image2" >
                 <img style="width: 30%" src="../Spinner.gif">
             </div>
             <div class="lb-text2">
-                <br>
                 <h2 style="font-size: 30px;">분석 중 입니다. 잠시만 기다려주세요!</h2>
             </div>
+            <br><br>
         </div>
         <div v-if="isLoading" class="row count">
             <div class="count_box">
                 <p>검색된 기사 개수</p>
-                <p>{{ totalNews }}</p>
+                <p class="number">{{ totalNews }}</p>
             </div>
             <div class="count_box">
                 <p>분석된 단어 개수</p>
-                <p>{{ vocab_size }}</p>
+                <p class="number">{{ vocab_size }}</p>
             </div>
             <div class="count_box">
                 <p>긍정 기사 개수</p>
-                <p>{{ pos_count }}</p>
+                <p class="number">{{ pos_count }}</p>
             </div>
             <div class="count_box">
                 <p>부정 기사 개수</p>
-                <p>{{ neg_count }}</p>
+                <p class="number">{{ neg_count }}</p>
             </div>
         </div>
         <div v-if="isLoading" class="row middle">
@@ -44,7 +48,9 @@
                 </div>
                 <div class="chart_score_positon col-md-4">
                     <div class="pie_chart_box">
-                        <Pie :height="240" :data="chartData" :options="chartOptions"></Pie>
+                        <div class="pie_chart">
+                            <Pie :data="chartData" :options="chartOptions"></Pie>
+                        </div>
                     </div>
                     <div class="score_box">
                         <div class="score">Score</div>
@@ -56,13 +62,18 @@
         <div v-if="isLoading" class="row PnN_news">
             <div class="row news">
                 <div class="news_list col-md-6">
-                    <PositiveNews :positiveNews="positiveTitle"></PositiveNews>
+                    <PositiveNews :positiveNews="positiveTitle" :link="positiveNews"></PositiveNews>
                 </div>
                 <div class="news_list col-md-6">
-                    <NegativeNews :negativeNews="negativeTitle"></NegativeNews>
+                    <NegativeNews :negativeNews="negativeTitle" :link="negativeNews"></NegativeNews>
                 </div>
             </div>
         </div>
+        <hr class = "hrstyle">
+        <footer>
+            <p style="float:right; margin-right:20px" ><a href="#">Back to top</a></p>
+            <p style="margin-left:5%" >&copy; 2021.09 – 2021.10 주투피아</p>
+        </footer>
     </div>
 </template>
 
@@ -92,7 +103,7 @@ export default {
     data(){
         return{
             isLoading: false,
-            searchWord: "주식",
+            searchWord: "코스피",
 
             myColors: ['#1f77b4', '#629fc9', '#94bedb', '#c9e0ef'],
             defaultWords: [{
@@ -175,6 +186,7 @@ export default {
             return res.data;
         },
         async searchStock(searchWord){
+            this.searchWord = searchWord
             let data = await this.getSearchNewsInfo(searchWord)
             this.totalNews = data.total_count
             // this.score = data.score_mean.toFixed(2)
@@ -212,49 +224,63 @@ export default {
 </script>
 
 <style>
+p.number {
+    font-size: 30px; 
+    font-weight:bold;
+}
+p.searchWord{
+    padding-top: 100px;
+    margin-left: 90px;
+    font-size: 40px;
+    font-weight: bold;
+}
 .lb-wrap2 {
   width: 100%;
-  position: relative;
+  /* position: relative; */
   text-align: center;
 }
 .lb-wrap2 img {
   width: 100%;
-  margin-top: 10%;
+  margin-top: 5%;
   text-align: center;
 }
 .lb-text2 {
   width: 100%;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   /* text-align: center; */
   color:rgb(32, 64, 168);
   position: absolute;
   /* transform: translate(-50%, -50%); */
 }
 .count{
-    width: 90%;
+    width: 92%;
     position: relative;
-    top: 150px;
-    left: 120px;
+    top: 0;
+    left: 100px;
 }
 
 .count_box{
+    font-size: 20px;
     display: inline;
     width: 24%;
-    border: 1px solid;
+    border: 10px solid;
     text-align: center;
+    border-radius: 10px;
     margin: 0 5px;
-    background-color: rgb(245, 250, 248);
+    background-color: white;
     /* border-radius: 0 15% 15% 0; */
-    border: white 1px solid;
+    border: rgb(58, 187, 127) 1px solid;
 }
 
 .middle{
-    margin-top: 180px;
-    background-color: rgb(245, 250, 248);
-    border-radius: 0 15% 15% 0;
+    width:90%;
+    margin-top: 30px;
+    background-color: white;
+    border-radius: 10px;
     border: white 1px solid;
     padding-top: 20px;
     padding-bottom: 20px;
+    margin-left: 90px
 }
 .Loading{
     margin-top: 180px;
@@ -275,20 +301,21 @@ export default {
 }
 
 .word_cloud_chart{
-    width: 90%;
+    width: 100%;
     position:relative;
     /* top:180px; */
-    left:120px;   
+    left:1%;   
 }
 
 .word_cloud_position{
-    border: 1px solid;
 }
 
 .pie_chart_box{
     position: relative;
     height: 60%;
-    border: 1px solid;
+}
+
+.pie_chart{
     margin: 0;
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -300,7 +327,6 @@ export default {
 .score_box{
     position: relative;
     height: 40%;
-    border: 1px solid;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -308,6 +334,8 @@ export default {
 }
 
 .score{
+    font-size: 30px; 
+    font-weight:bold;
     margin: 0;
     height: 50%;
     vertical-align: middle;
@@ -315,19 +343,23 @@ export default {
 }
 
 .grade{
+    font-size: 50px; 
+    font-weight:bold;
     margin: 0;
-    height: 50%;
+    height: 30%;
     vertical-align: middle;
     /* padding: 5%; */
 }
 
 .PnN_news{
-    margin-top: 40px;
-    background-color: rgb(245, 250, 248);
-    border-radius: 0 15% 15% 0;
-    /* border: white 1px solid; */
+    width:90%;
+    margin-top: 30px;
+    background-color: white;
+    border-radius: 10px;
+    border: white 1px solid;
     padding-top: 20px;
     padding-bottom: 20px;
+    margin-left: 90px
 }
 
 .news{
@@ -338,8 +370,9 @@ export default {
 }
 
 .news_list{
-    display: inline;
+    display: inline-block;
     width : 49%;
+    height: 400px;
     border: 1px solid;
     margin: 0 5px;
     background-color: white;
