@@ -47,7 +47,7 @@ class News:
                 return None
 
             new_df = pd.DataFrame(r.json()['items'])
-            new_df= new_df[new_df['title'].str.contains(search_word)]
+            # new_df= new_df[new_df['title'].str.contains(search_word)]
             new_df['pubDate'] = [ dt.datetime.strptime(x[5:16], "%d %b %Y").strftime('%Y-%m-%d') for x in new_df['pubDate'] ]
         except:
             return None

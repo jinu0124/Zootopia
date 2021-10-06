@@ -25,8 +25,8 @@ async def news_predict(search_word: str):
         df = news_service.DFconcat(df, new_news)
 
     days_2ago = (dt.datetime.today() - dt.timedelta(days=2)).strftime('%Y-%m-%d')
-    # 분석기사 수 200개 제한
-    df = df[df['pubDate'] >= days_2ago].reset_index(drop=True)[:200]
+    # 분석기사 수 100개 제한
+    #df = df[df['pubDate'] >= days_2ago].reset_index(drop=True)[:100]
     print("df 길이는 100! ---------> ", len(df))
 
     # 형태소 분석
