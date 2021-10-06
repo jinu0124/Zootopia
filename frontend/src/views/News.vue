@@ -17,7 +17,7 @@
             <div class="lb-text2">
                 <h2 style="font-size: 30px;">분석 중 입니다. 잠시만 기다려주세요!</h2>
             </div>
-            <br><br><br><br>
+            <br><br>
         </div>
         <div v-if="isLoading" class="row count">
             <div class="count_box">
@@ -69,7 +69,11 @@
                 </div>
             </div>
         </div>
-        <br>
+        <hr class = "hrstyle">
+        <footer>
+            <p style="float:right; margin-right:20px" ><a href="#">Back to top</a></p>
+            <p style="margin-left:5%" >&copy; 2021.09 – 2021.10 주투피아</p>
+        </footer>
     </div>
 </template>
 
