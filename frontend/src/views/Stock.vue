@@ -351,9 +351,11 @@ export default {
 }
 
 .outer_box{
+    width: 90%;
+    margin-left: 90px;
     margin-top: 130px;
     background-color: rgb(245, 250, 248);
-    /* border-radius: 0 15% 15% 0; */
+    border-radius: 10px;
     border: white 1px solid;
     padding-top: 20px;
     padding-bottom: 20px;

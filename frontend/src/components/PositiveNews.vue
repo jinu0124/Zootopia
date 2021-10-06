@@ -1,9 +1,9 @@
 <template>
     <div class="stock_info" style="">
-        <p style="font-size: 24px;">긍정 뉴스</p>
-        <p style="color: blue;">Positive</p>
+        <p style="font-size: 24px;">긍정 뉴스 <span style="font-size: 16px; color: blue;">Positive</span> </p>
+        
         <ul>
-            <li :class="{'news_odd': i%2==1, 'news_even': i%2==0}" v-for="(item, i) in link" v-bind:key="item"><div class="info_title"></div><p>&nbsp; <a :href="item" target="_blank">{{ positiveNews[i] }}</a> &nbsp; </p></li>
+            <li :class="i" v-for="(item, i) in link" v-bind:key="item"><a :href="item" target="_blank">{{ positiveNews[i] }}</a></li>
         </ul>
     </div>
 </template>
@@ -37,14 +37,14 @@ export default {
 </script>
 
 <style>
-.info_title{
+/* .info_title{
     color: rgb(158, 152, 152);
     font-size: 0.6em !important;
 }
 .info_title ~p a{
-    /* width : 40%; */
+    width : 40%;
     text-overflow: ellipsis;
-}
+} */
 
 .stock_info{
     padding: 0;
@@ -64,20 +64,9 @@ export default {
 
 .stock_info>ul>li:not(:last-child){
     margin: 0;
-    
     float:center;
-    padding-bottom: 15px;
-    border-bottom:rgba(18, 87, 61, 0.144) 1px solid;
+    border-bottom:rgb(107, 156, 179) 1px solid;
 }
-.stock_info>ul>li:not(:first-child){
-    padding-top: 10px;
-}
-
-/* .stock_info>ul>li:not(last-child){
-    font-size: 1.5em;
-    text-align:center;
-    float:center;
-} */
 
 a { 
     text-decoration:none;
@@ -87,12 +76,8 @@ ul{
    list-style:none;
 }
 
-/* .news_odd{
-    background-color: MediumSeaGreen;
+li{
+    padding: 10px;
 }
-
-.news_even{
-    background-color:chartreuse
-} */
 
 </style>
