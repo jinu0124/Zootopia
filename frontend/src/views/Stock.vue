@@ -6,6 +6,10 @@
         <div class="row">
             <SearchBar v-on:searchStock="searchStock"></SearchBar>
         </div>
+        <div>
+            <br>
+            <p class="searchWord">검색명 '{{ searchWord }}'</p>
+        </div>
         <div v-if="searchWord==''">
             
         </div>
@@ -167,18 +171,26 @@ export default {
 
             await this.removeHoga()
             let data = await this.getStockProfile(searchWord)
-            this.searchWord = data.NAME
             
-            this.stockProfile = data
-            
-            this.stockGraph(this.stockProfile.symbol)
+            if(data == null){
+                alert("없는 종목입니다. 정확한 종목명을 입력해주세요")
+                
+            }else{
+                this.searchWord = data.NAME
 
-            this.getToday(this.stockProfile.symbol)
+                
+                
+                this.stockProfile = data
+                
+                this.stockGraph(this.stockProfile.symbol)
 
-            await this.registerHoga(this.stockProfile.symbol)
-            this.getHoga(this.stockProfile.symbol)
+                this.getToday(this.stockProfile.symbol)
 
-            await this.financeInfo(data.NAME)
+                await this.registerHoga(this.stockProfile.symbol)
+                this.getHoga(this.stockProfile.symbol)
+
+                await this.financeInfo(data.NAME)
+            }
         },
         async stockGraph(symbol){
             let dur = 30
@@ -353,7 +365,6 @@ export default {
 .outer_box{
     width: 90%;
     margin-left: 90px;
-    margin-top: 130px;
     background-color: rgb(245, 250, 248);
     border-radius: 10px;
     border: white 1px solid;
