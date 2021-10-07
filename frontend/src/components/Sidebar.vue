@@ -3,17 +3,17 @@
     <div>
         <nav class="main-menu">
          <ul>
-             <li>
-                <div @click=moveToHome() class="mouse-on">
-                    <i class="fa fa-home fa-3x"></i>
+             <li @click=moveToHome() class="mouse-on">
+                <!-- <div > -->
+                    <i class="fa fa-home fa-2x"></i>
                     <span class="nav-text">
                         주투피아
                     </span>
-                </div>
+                <!-- </div> -->
             </li>
             <li>
                 <div @click=moveToNews() class="mouse-on">
-                    <i class="fa fa-home fa-2x"></i>
+                    <i class="fa fa-search-plus fa-2x"></i>
                     <span class="nav-text">
                         News Analysis
                     </span>
@@ -22,7 +22,7 @@
             </li>
             <li class="">
                 <div @click=moveToStock() class="mouse-on">
-                    <i class="fa fa-laptop fa-2x"></i>
+                    <i class="fa fa-won fa-2x"></i>
                     <span class="nav-text">
                         Stock Analysis
                     </span>
@@ -57,6 +57,8 @@ export default {
 </script>
 
 <style>
+@import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
+
 .mouse-on:hover{
     cursor: pointer; 
     color:#fff; 
@@ -71,6 +73,7 @@ font-size: 3em;
 
 .fa-2x {
 font-size: 2em;
+filter: invert(100%);
 }
 .fa {
 position: relative;

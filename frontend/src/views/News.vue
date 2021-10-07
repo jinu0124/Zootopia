@@ -12,7 +12,7 @@
         </div>
         <div v-if="isLoading ? false : true" class="lb-wrap2">
             <div class="lb-image2" >
-                <img style="width: 30%" src="../Spinner.gif">
+                <img style="width: 5%" src="../Spinner.gif">
             </div>
             <div class="lb-text2">
                 <h2 style="font-size: 30px;">분석 중 입니다. 잠시만 기다려주세요!</h2>

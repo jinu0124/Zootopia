@@ -20,7 +20,8 @@ export default {
 
 <style>
 #app {
-  font-family: "Noto Sans KR", sans-serif;
+  /* font-family: "Noto Sans KR", sans-serif; */
+  font-family: 'Spoqa Han Sans Neo', 'sans-serif';
   height: 100%;
   min-height: 100vh;
 }
