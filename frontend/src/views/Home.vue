@@ -33,10 +33,10 @@
         <hr class = "hrstyle">
 
         <div class="row featurette">
-            <div class="col-img col-md-3">
+            <div class="col-md-4">
                 <div class="hover_effect_box hover_effect_5">
                     <div class="content_bg">
-                        <img src="../news_view.png" class="img2" width="500" height="500"/>
+                        <img src="../news_view.png" class="img2" />
                     </div>
                     <div class="caption">
                         <div class="caption_desc">
@@ -47,9 +47,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col col-md-8" style="margin-top: 100px; margin-left: 80px">
+            <div class="col-md-8" style="margin-top: 100px;">
                 <h2 class="featurette-heading"><a style="font-size: 95px">1 </a> <a style="font-size: 50px">뉴스기사 분석 서비스</a> <span class="text-muted"> +Word Cloud</span></h2>
-                <br>
                 <p class="lead" style="font-size: 26px; margin-left: 30px"><a style="font-weight: bolder; font-size: 31px;"> What is the most important to investment? &nbsp; &nbsp;</a>
                         <a style="font-weight: bold; font-size: 30px;">Information <a style="font-weight: normal;">and</a> <a style="font-weight: bold; font-size: 30px;">Accuracy</a></a> <br>
                         뉴스 데이터 분석 시스템은 실시간으로 가장 정확한 뉴스 정보를 신속히 제공하여 투자를 위한 분석 시간을 단축시켜줍니다. <br>
@@ -68,7 +67,7 @@
             <div class="col-md-4">
                 <div class="hover_effect_box hover_effect_5">
                     <div class="content_bg">
-                        <img src="../stock_view.jpg" class="img2" width="500" height="500"/>
+                        <img src="../stock_view.jpg" class="img2"/>
                     </div>
                     <div class="caption">
                         <div class="caption_desc">
@@ -200,8 +199,6 @@ hr.hrstyle{
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
 }
 .hover_effect_box {
-    width: 500px;
-    height: 500px;
     margin: 10px;
     border: 10px solid #f3f3f3;
     overflow: hidden;
@@ -220,8 +217,8 @@ hr.hrstyle{
 
  .hover_effect_box .caption
  , .hover_effect_box .mask  {
-    width: 500px;
-    height: 500px;
+    width: 100%;
+    height: 100%;
     position: absolute;
     overflow: hidden;
     top: 0;
@@ -303,5 +300,21 @@ hr.hrstyle{
     -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: alpha(opacity=100);
     opacity: 1;
+ }
+
+ .content_bg{
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    overflow: hidden;
+ }
+
+ .content_bg .img2{
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
  }
 </style>
