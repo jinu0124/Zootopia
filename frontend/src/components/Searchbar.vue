@@ -4,7 +4,7 @@
             <div class="search">
             <div name="cse" id="searchbox_demo" class="searchform row" autocomplete="off">
                 <div class="col-md-10">
-                    <input style="margin-right:0" type="text" placeholder="종목검색" class="searchbox form-control" v-model=searchWord v-on:keyup.enter="onOmit()"/>
+                    <input style="margin-right:0" type="text" placeholder="종목을 검색해주세요" class="searchbox form-control" v-model=searchWord v-on:keyup.enter="onOmit()"/>
                 </div>
                 <div class="col-md-2">
                     <button style="border: rgb(0, 180, 96) 2px solid;" class="btn" @click="onOmit()">Search</button>
