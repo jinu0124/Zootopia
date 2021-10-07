@@ -10,18 +10,20 @@ services:
                 container_name: client
                 build:
                         context: ./frontend
+                restart: always
                 depends_on:
                         - server
                 ports:
                         - "80:80"
                         - "443:443"
                 volumes:
-                        - ./frontend/.certbot/conf:/etc/nginx/ssl
-                        - ./frontend/.certbot/data:/var/www/certbot
-        certbot:
-                image: cerbot/certbot:latest
-                command: certonly --webroot --webroot-path=/var/www/certbot --email anstjd9115@gmail.com --agree-tos --no-eff-email -d j5a602.p.ssafy.io
-                volumes:
+                        #- ./frontend/.certbot/conf:/etc/nginx/ssl
                         - ./frontend/.certbot/conf:/etc/letsencrypt
-                        - ./frontend/.certbot/logs:/var/log/letsencrypt
                         - ./frontend/.certbot/data:/var/www/certbot
+                          #        certbot:
+                          #                image: certbot/certbot:latest
+                          #                command: certonly --webroot --webroot-path=/var/www/certbot --email anstjd9115@gmail.com --agree-tos --no-eff-email -d j5a602.p.ssafy.io
+                          #                volumes:
+                          #                        - ./frontend/.certbot/conf:/etc/letsencrypt
+                          #                        - ./frontend/.certbot/logs:/var/log/letsencrypt
+                          #                        - ./frontend/.certbot/data:/var/www/certbot
