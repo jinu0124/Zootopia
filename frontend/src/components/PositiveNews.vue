@@ -50,8 +50,8 @@ export default {
     padding: 0;
     margin: 0;
     height: 100%;
-    
     overflow-y:scroll;
+    font-family: 'Gothic A1', sans-serif;
 }
 
 .stock_info>ul{
