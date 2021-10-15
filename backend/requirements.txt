@@ -4,7 +4,7 @@ cython
 scipy
 h5py==3.1.0
 pymysql
-keras==2.6.0
+keras
 pyqt5==5.13
 finance-datareader
 fastapi[all]
