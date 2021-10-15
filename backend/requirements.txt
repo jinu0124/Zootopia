@@ -10,7 +10,7 @@ finance-datareader
 fastapi[all]
 uvicorn[standard]
 gunicorn
-tensorflow==2.6.0
+tensorflow-cpu
 scikit-learn
 beautifulsoup4
 sqlalchemy==1.4.22
